@@ -6,9 +6,9 @@ developed for leukemia diagnostics at Hannover Medical School.*
 `qpcrpredict` predicts the positive or negative call of a real-time PCR assay directly from the
 raw run file of the instrument (Applied Biosystems `.eds`, or the vendor-neutral RDML format). It
 was developed for the qualitative molecular measurable residual disease (MRD) result in acute
-myeloid leukemia, and the packaged model covers that application. Nothing assay-specific is fixed
-in the code: targets, reference gene, control names, cycle number and thresholds are defined in an
-assay configuration, so a model can be trained for any standard-curve qPCR assay.
+myeloid leukemia, and the packaged model covers that application. Targets, reference gene, control
+names, cycle number and thresholds are defined in an assay configuration, so a model can be
+trained for other standard-curve qPCR assays.
 
 Documentation: https://qpcrpredict.readthedocs.io/
 

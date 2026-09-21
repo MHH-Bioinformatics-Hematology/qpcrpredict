@@ -55,7 +55,7 @@ Annotations never change the decision. They are added for
 
 All thresholds are set in the `qc` section of the assay configuration and correspond to the fields
 of `qpcrpredict.QCThresholds`. The configuration is stored inside the model bundle, so a trained model
-always carries the thresholds it was built with.
+contains the thresholds it was trained with.
 
 | Field | Default | Meaning |
 |---|---|---|

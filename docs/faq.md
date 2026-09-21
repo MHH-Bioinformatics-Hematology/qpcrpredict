@@ -2,7 +2,7 @@
 
 ## Does qpcrpredict replace the laboratory scientist?
 
-No. It replaces the first-pass interpretation. Every run is still reviewed and approved by a
+No. The tool makes the first-pass interpretation. Every run is still reviewed and approved by a
 person, and samples with a `review` or `na` decision need full manual inspection.
 
 ## Do I need a sample sheet that lists the genes?
@@ -20,7 +20,7 @@ which criterion failed.
 
 ## Why is a sample reported as `review` although the probability is close to 0 or 1?
 
-The sample is deferred when the classifier and the replicate rule disagree, whatever the
+The sample is deferred when the classifier and the replicate rule disagree, independent of the
 probability. A typical case is a late, low amplification in 2 of 3 wells that the classifier
 recognizes as the curve of a negative sample. The `review_reason` column names the conflict.
 

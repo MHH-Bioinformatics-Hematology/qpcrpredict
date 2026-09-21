@@ -20,13 +20,13 @@ decisions per sample:
 | `review` | the result is borderline and is deferred to a human |
 | `na` | the run is not assessable for this sample and should be repeated |
 
-Every `review` and `na` decision comes with the reason and a recommended action. The tool is a
-decision-support step. It prepares the call; a laboratory scientist reviews and approves every run.
+Every `review` and `na` decision comes with the reason and a recommended action. The tool
+supports the decision. A laboratory scientist reviews and approves every run.
 
 The packaged model and the default assay cover mutated *NPM1*, *RUNX1::RUNX1T1*, *CBFB::MYH11*,
-*PML::RARA* and *BCR::ABL1*, each quantified against the reference gene *ABL1*. Nothing of this is
-fixed in the code: targets, reference gene, control names and thresholds are defined in an
-[assay configuration](assay.md), so the tool can be trained for any standard-curve qPCR assay.
+*PML::RARA* and *BCR::ABL1*, each quantified against the reference gene *ABL1*. Targets, reference
+gene, control names and thresholds are defined in an [assay configuration](assay.md), so the tool
+can be trained for other standard-curve qPCR assays.
 
 !!! warning "Intended use"
     `qpcrpredict` is research software. It is not a certified in vitro diagnostic device. The packaged model
@@ -40,6 +40,6 @@ fixed in the code: targets, reference gene, control names and thresholds are def
 | `qpcrpredict` | real-time PCR run files (`.eds`, RDML) | positive/negative call of a qPCR assay; packaged model for AML molecular MRD |
 | `cepredict` | capillary electrophoresis traces (`.fsa`) | mutation and fusion calls from fragment analysis (in preparation) |
 
-The tools share one design: features come only from the raw instrument file, a trained model makes
-the call, a rule-based gate defers what is uncertain, and everything assay-specific is
-configuration, not code.
+The tools share one design: features are computed from the raw instrument file, a trained model
+makes the call, a rule-based gate defers uncertain samples to a person, and the assay is defined in
+a configuration file.

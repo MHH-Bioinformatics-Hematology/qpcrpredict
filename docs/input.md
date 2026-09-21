@@ -37,7 +37,8 @@ RDML does not store two things that an `.eds` file provides, so `qpcrpredict` co
 - **Baseline-subtracted curve.** If the file carries no background values, the mean fluorescence
   of the baseline cycles of the assay (default cycles 3 to 15) is subtracted.
 
-Values that a file already provides are never recomputed, so `.eds` files pass through unchanged.
+Values that a file already provides are not recomputed. `.eds` files contain them and are used as
+they are.
 
 On our data, converting `.eds` runs to RDML and scoring both gave the same decision for 97.6% of
 466 samples, and the computed reference quantities agreed with the instrument to four digits.

@@ -4,8 +4,8 @@ Part of the LeukoPredict tools, developed for leukemia diagnostics at Hannover M
 
 Features are derived only from the run file (amplification curves, Ct and quantities). A trained
 classifier gives the probability of a positive call; a quality and review gate turns runs that
-cannot be evaluated into an explicit 'na' (repeat) and ambiguous calls into 'review'. Everything
-specific to an assay is defined in an assay configuration, not in the code.
+cannot be evaluated into an explicit 'na' (repeat) and ambiguous calls into 'review'. Targets,
+reference gene, control names and thresholds are defined in an assay configuration.
 """
 __version__ = "1"
 

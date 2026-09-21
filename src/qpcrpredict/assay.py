@@ -1,7 +1,7 @@
-"""Assay configuration: everything that is specific to a laboratory's qPCR assay.
+"""Assay configuration for a laboratory's qPCR assay.
 
-Nothing about targets, reference genes, control names, label vocabulary, cycle number or
-thresholds is written into the code. It all comes from an assay configuration (JSON). Two
+Targets, reference genes, control names, label vocabulary, cycle number and thresholds are read
+from an assay configuration (JSON). Two
 configurations ship with the package: ``aml_mrd`` (the default, matching the packaged model) and
 ``generic`` (a template for any standard-curve qPCR assay).
 """
