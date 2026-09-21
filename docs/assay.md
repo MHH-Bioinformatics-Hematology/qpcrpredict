@@ -1,10 +1,9 @@
 # Assay configuration
 
-Nothing about a particular assay is written into the code. Target names, the reference gene,
-the names of controls and standards, the vocabulary of the labels, the cycle number and every
-threshold come from an **assay configuration**, a JSON file. To use `qpcrpredict` for a different
-assay, with any biological background, you write a configuration and train a model. No code
-change is needed.
+An **assay configuration** is a JSON file that defines the target names, the reference gene, the
+names of controls and standards, the vocabulary of the labels, the cycle number and the
+thresholds. To use `qpcrpredict` for a different assay, write a configuration for it and train a
+model with that configuration.
 
 ## Packaged configurations
 
@@ -31,11 +30,10 @@ which sample names are taken as controls. Adjust the configuration until this ma
 
 ## How a plate is interpreted
 
-No sample sheet is needed for prediction. The gene of every well is already in the run file: when
-a plate is set up on the instrument, each well gets a **detector name** (for example
-`NPM1 mut A` or `ABL`) and a **sample name**. `qpcrpredict` reads both from the run file, and the assay
-configuration tells it how to interpret them. A labels table is needed only for
-[training](train.md).
+When a plate is set up on the instrument, each well gets a **detector name** (for example
+`NPM1 mut A` or `ABL`) and a **sample name**. Both are stored in the run file. `qpcrpredict` reads
+them from there and interprets them with the assay configuration, so prediction needs only the
+run file. A labels table is needed for [training](train.md).
 
 ### The reference gene
 
@@ -148,7 +146,7 @@ family are scored as one target. `aliases` are further accepted spellings of `--
 `patterns` decide which detector names on a plate belong to the target. `subtypes` is optional:
 the first matching rule names the subtype, and `{1}` is replaced by the first captured group.
 
-## The configuration travels with the model
+## The configuration is stored in the model
 
 `qpcrpredict train --assay my_assay.json` stores the complete configuration inside the model bundle.
 `qpcrpredict predict` reads it from there, so prediction always uses the definitions and thresholds

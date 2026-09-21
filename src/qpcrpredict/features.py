@@ -2,7 +2,7 @@
 
 A 'sample' is one sample's target replicate wells plus its reference-gene replicate wells on one
 plate. This module is the single source of truth shared by training and inference, so the model
-always sees identically built features. Everything assay-specific (reference gene, target names,
+always sees identically built features. The assay-specific settings (reference gene, target names,
 cycle number, Ct limits, ratio scale) comes from the :class:`qpcrpredict.assay.Assay` that is passed in.
 """
 import collections
