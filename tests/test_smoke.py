@@ -167,3 +167,22 @@ def test_packaged_model_predicts():
     X, _ = F.build_features(pd.DataFrame([row]), pd.DataFrame([curves]), b["rep"], a.ct_cap)
     p = b["pipeline"].predict_proba(X)[0, 1]
     assert 0.0 <= p <= 1.0
+
+
+def test_restricted_family_is_flagged_and_can_be_refused(tmp_path):
+    import joblib
+    from qpcrpredict.models import license_note
+    from qpcrpredict.predict import predict
+    assert license_note("hist_gb") is None
+    assert "non-commercial" in license_note("tabpfn_v26")
+    from qpcrpredict.bundle import load_bundle
+    b = dict(load_bundle())
+    b["model_name"] = "tabpfn_v26"                       # pretend: only the family name is checked
+    p = str(tmp_path / "t.pkl")
+    joblib.dump(b, p)
+    run = str(tmp_path / "r.rdml")
+    write_rdml(synthetic_run(reference="ABL", target="NPM1 mut A"), run, {"ABL"})
+    with pytest.raises(SystemExit) as e:
+        predict(run, "NPM1", p, quiet=True, disallow_families=["tabpfn"])
+    assert "Prior Labs" in str(e.value)
+    assert len(predict(run, "NPM1", p, quiet=True)) == 1  # allowed when not refused

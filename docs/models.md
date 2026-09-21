@@ -10,10 +10,30 @@
 | `extra_trees` | extremely randomized trees | |
 | `lightgbm` | LightGBM | |
 | `catboost` | CatBoost | |
-| `tabpfn_v25`, `tabpfn_v26`, `tabpfn_v3` | TabPFN | GPU recommended for training |
+| `tabpfn_v25`, `tabpfn_v26`, `tabpfn_v3` | TabPFN | GPU recommended for training; non-commercial license, see below |
 
 All families are installed with the package. They are trained on the same features and return a probability, so the quality and review
 gate works identically with each of them.
+
+## License of the TabPFN families
+
+The pretrained TabPFN models (`tabpfn_v25`, `tabpfn_v26`, `tabpfn_v3`) are licensed by Prior Labs
+GmbH under the TabPFN Non-Commercial Licenses. A model bundle of these families contains the
+pretrained model, so the license applies to the bundle as well.
+
+- **Allowed:** academic, non-commercial research, including benchmarking and evaluation.
+- **Requires a commercial license from Prior Labs GmbH:** use in a commercial setting, in routine
+  diagnostics or any other production deployment, and offering the model as part of a hosted
+  service.
+- **When you distribute a TabPFN bundle:** include the license text and the attribution notice of
+  the TabPFN version, state that the bundle is a derivative, and keep "TabPFN" at the beginning of
+  the model name. The public data deposit shows this layout, see [Public data](data.md).
+
+`qpcrpredict` prints this license note when a TabPFN bundle is trained, inspected or used, and
+stores it in the bundle. `qpcrpredict predict --disallow-family tabpfn` refuses such bundles; the
+Galaxy tool always sets this option. All other model families, including the packaged `hist_gb`
+model, carry no such restriction. In the laboratory of the authors no TabPFN model is deployed for
+this reason. Built with PriorLabs-TabPFN.
 
 ## The packaged model
 

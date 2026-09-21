@@ -10,5 +10,6 @@
   Packaged configurations `aml_mrd` (default) and `generic`.
 - Packaged default model (`hist_gb`, 26 features, 1,897 training samples) for AML molecular MRD.
 - Four-way decision with the quality and review gate.
+- License note for the TabPFN families; `--disallow-family` refuses bundles of a model family.
 - Bioconda package (Linux and macOS) with all model families included.
 - Galaxy tool wrapper (ToolShed owner `mhh-hematology`).

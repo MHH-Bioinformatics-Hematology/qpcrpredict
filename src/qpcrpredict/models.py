@@ -15,6 +15,25 @@ MODEL_ALIASES = {"histgb": "hist_gb", "hgb": "hist_gb", "rf": "random_forest",
                  "et": "extra_trees", "lgbm": "lightgbm", "lgb": "lightgbm", "cat": "catboost"}
 
 
+# Model families whose pretrained weights carry a restrictive license. The text is stored in every
+# bundle of such a family and shown when the bundle is trained, inspected or refused.
+RESTRICTED_LICENSES = {
+    "tabpfn": ("TabPFN models are licensed by Prior Labs GmbH for non-commercial use only. A bundle of "
+               "this family contains the pretrained TabPFN model. It may be used for academic, "
+               "non-commercial research. Use in a commercial setting, in routine diagnostics or any "
+               "other production deployment, or as part of a hosted service, requires a separate "
+               "commercial license from Prior Labs GmbH. Built with PriorLabs-TabPFN."),
+}
+
+
+def license_note(model_name):
+    """License text for a restricted model family, or None."""
+    for prefix, text in RESTRICTED_LICENSES.items():
+        if str(model_name or "").lower().startswith(prefix):
+            return text
+    return None
+
+
 def resolve_model(name):
     return MODEL_ALIASES.get(name, name)
 

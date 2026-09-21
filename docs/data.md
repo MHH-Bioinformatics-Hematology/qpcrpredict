@@ -6,6 +6,8 @@ The anonymized data of the publication are deposited at Zenodo.
 |---|---|
 | `eds/run_0001.eds` to `eds/run_0386.eds` | 386 raw run files |
 | `samples.csv` | 1,897 sample measurements with the laboratory call |
+| `models/` | model bundles of six families, trained on all rows and on the development period |
+| `models_tabpfn_noncommercial/` | TabPFN model bundles with their licenses and notice; academic, non-commercial use only |
 | `README.md` | description of the deposit |
 
 `samples.csv` is a valid labels table for `qpcrpredict train`:
