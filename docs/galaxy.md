@@ -36,6 +36,11 @@ A plate with two targets is handled with two tool steps on the same input datase
 Because the output is a plain table, it can be filtered with the standard text tools, for example
 to extract all rows with `decision` equal to `review` or `na`.
 
+Model bundles of the TabPFN families are refused by the Galaxy tool. The pretrained TabPFN models
+are licensed for non-commercial use only, and their license does not permit offering them as part
+of a hosted service without a commercial license from Prior Labs GmbH, see
+[License of the TabPFN families](models.md#license-of-the-tabpfn-families).
+
 Training is not part of the Galaxy tool. Train a model on the command line and upload the
 resulting bundle. Upload only bundles from a source you trust, see [Training](train.md).
 

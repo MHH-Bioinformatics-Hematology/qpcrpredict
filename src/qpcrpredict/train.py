@@ -133,6 +133,9 @@ def fit(runs_dir, labels_path, model_name="hist_gb", rep="all", out="model.pkl",
         else:
             log("      (not enough groups/classes for CV; skipped)")
 
+    note = M.license_note(model_name)
+    if note:
+        log("[license] " + note)
     log("[fit] training final model on ALL samples ...")
     clf = M.make_model(model_name)
     clf.fit(X, y)
@@ -140,6 +143,8 @@ def fit(runs_dir, labels_path, model_name="hist_gb", rep="all", out="model.pkl",
                   feature_dim=int(X.shape[1]), n_train=len(df), assay=A.to_dict(),
                   cv_metrics=cv_metrics, created=datetime.date.today().isoformat(),
                   note="positive/negative classifier; pair with qpcrpredict.qc.assess for the 4-way decision.")
+    if note:
+        bundle["license"] = note
     save_bundle(bundle, out)
     log(f"[fit] saved model bundle -> {out}")
     return out

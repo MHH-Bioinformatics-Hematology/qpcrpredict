@@ -31,6 +31,9 @@ def _info(argv=None):
         print(f"  {'assay':12s}: {A.name}")
         print(f"  {'reference':12s}: {A.reference_name}")
         print(f"  {'targets':12s}: {', '.join(A.target_names) or '(any detector on the plate)'}")
+        note = M.license_note(b.get("model_name"))
+        if note:
+            print(f"  {'license':12s}: {note}")
         if b.get("cv_metrics"):
             cm = b["cv_metrics"]
             keys = [k for k in ("roc_auc", "accuracy", "precision", "recall", "specificity", "f1", "f2", "mcc") if k in cm]

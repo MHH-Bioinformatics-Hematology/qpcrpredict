@@ -19,6 +19,7 @@ from .io import load_run
 from . import features as F
 from . import qc as QC
 from .bundle import load_bundle, bundle_assay
+from .models import license_note
 
 
 def _r(x):
@@ -44,10 +45,17 @@ def samples_for_family(parsed, family, assay):
     return out
 
 
-def predict(run_path, target, model_path=None, sample=None, out_path=None, quiet=False, assay=None):
+def predict(run_path, target, model_path=None, sample=None, out_path=None, quiet=False, assay=None,
+            disallow_families=()):
     """Return a DataFrame of predictions for ``target`` in ``run_path`` using ``model_path``.
-    ``assay`` overrides the assay configuration stored in the model bundle."""
+    ``assay`` overrides the assay configuration stored in the model bundle. ``disallow_families``
+    lists model-family prefixes (for example "tabpfn") whose bundles are refused."""
     bundle = load_bundle(model_path)
+    family_name = str(bundle.get("model_name") or "").lower()
+    for prefix in disallow_families or ():
+        if family_name.startswith(str(prefix).lower()):
+            raise SystemExit(f"model family '{family_name}' is not allowed here. "
+                             + (license_note(family_name) or ""))
     A = bundle_assay(bundle, assay)
     family = A.resolve_target(target)
     rep = bundle["rep"]
@@ -127,6 +135,9 @@ def _report(res, run_path, run_date, bundle, family, assay):
                 print(f"       {label:7s}: {_txt(key)}")
     print("=" * 92)
     print("summary:", res["decision"].value_counts().to_dict())
+    note = license_note(bundle.get("model_name"))
+    if note:
+        print("license:", note)
 
 
 def main(argv=None):
@@ -142,13 +153,17 @@ def main(argv=None):
     ap.add_argument("--assay", default=None,
                     help="assay configuration (packaged name or JSON file) that overrides the one "
                          "stored in the model bundle")
+    ap.add_argument("--disallow-family", action="append", default=[], metavar="PREFIX",
+                    help="refuse model bundles of this family, for example 'tabpfn' where the "
+                         "non-commercial TabPFN license does not permit their use; may be repeated")
     ap.add_argument("--sample", default=None,
                     help="score only this sample (default: all samples of the target)")
     ap.add_argument("--out", default=None, help="write predictions as TSV here")
     ap.add_argument("--quiet", action="store_true", help="suppress the console report")
     a = ap.parse_args(argv)
     try:
-        predict(a.run, a.target, a.model, sample=a.sample, out_path=a.out, quiet=a.quiet, assay=a.assay)
+        predict(a.run, a.target, a.model, sample=a.sample, out_path=a.out, quiet=a.quiet, assay=a.assay,
+                disallow_families=a.disallow_family)
     except ValueError as e:
         raise SystemExit(str(e))
 

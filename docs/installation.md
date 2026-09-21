@@ -28,6 +28,8 @@ function of the tool.
 | openpyxl, xlrd | reading a labels table from `.xlsx` or `.xls` |
 
 TabPFN downloads its model checkpoints on first use and needs a GPU for practical training times.
+The pretrained TabPFN models are licensed for non-commercial use only, see
+[License of the TabPFN families](models.md#license-of-the-tabpfn-families).
 All other functions run on a CPU.
 
 ## Check the installation

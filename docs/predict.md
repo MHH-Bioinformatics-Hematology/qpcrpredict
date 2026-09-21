@@ -2,7 +2,7 @@
 
 ```text
 qpcrpredict predict --run RUN --target TARGET [--model MODEL] [--assay ASSAY]
-               [--sample SAMPLE] [--out OUT] [--quiet]
+               [--disallow-family PREFIX] [--sample SAMPLE] [--out OUT] [--quiet]
 ```
 
 `qpcrpredict-predict` is an equivalent stand-alone entry point.
@@ -15,6 +15,7 @@ qpcrpredict predict --run RUN --target TARGET [--model MODEL] [--assay ASSAY]
 | `--target` | yes | | Target to score: a target name or alias of the assay, or a detector name as written on the plate. For the default assay: `NPM1`, `RUNX1::RUNX1T1`, `CBFB::MYH11`, `PML::RARA`, `BCR::ABL1`, and spellings such as `t(8;21)` or `inv16`. `--gene` is accepted as an alias. |
 | `--model` | no | packaged model | Model bundle (`.pkl`) written by `qpcrpredict train`. |
 | `--assay` | no | from the model | Assay configuration (packaged name or JSON file) that overrides the one stored in the model bundle. |
+| `--disallow-family` | no | | Refuse model bundles of this family, for example `tabpfn`, see [License of the TabPFN families](models.md#license-of-the-tabpfn-families). May be repeated. |
 | `--sample` | no | all samples | Score only the sample with this name. The comparison ignores case. |
 | `--out` | no | | Write the result table as tab-separated text to this path. |
 | `--quiet` | no | off | Suppress the console report. Useful in pipelines together with `--out`. |
