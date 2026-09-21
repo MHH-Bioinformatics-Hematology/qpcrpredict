@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qpcrpredict"
+version = "1"
+description = "Trained positive/negative calls from raw real-time PCR run files (.eds, .rdml), with a packaged model for AML molecular MRD. Part of the LeukoPredict tools."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Joachim Wolff", email = "wolff.joachim@mh-hannover.de" }]
+keywords = ["qPCR", "RDML", "MRD", "AML", "leukemia", "diagnostics", "LeukoPredict"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+  "numpy",
+  "pandas",
+  "scikit-learn>=1.3",
+  "scipy",
+  "joblib",
+  "pyarrow",
+]
+
+[project.optional-dependencies]
+# gradient-boosting model families beyond scikit-learn's HistGradientBoosting
+boost = ["lightgbm", "catboost"]
+# transformer tabular models (heavy: pulls in torch and downloads checkpoints)
+tabpfn = ["torch", "tabpfn>=8"]
+# reading a sample/gene datasheet in Excel form
+excel = ["openpyxl", "xlrd>=2.0"]
+
+[project.scripts]
+qpcrpredict = "qpcrpredict.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/MHH-Bioinformatics-Hematology/qpcrpredict"
+Source = "https://github.com/MHH-Bioinformatics-Hematology/qpcrpredict"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+qpcrpredict = ["data/*.pkl", "data/*.json", "data/assays/*.json"]

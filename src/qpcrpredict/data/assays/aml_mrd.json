@@ -1,0 +1,300 @@
+{
+  "name": "aml_mrd",
+  "description": "AML molecular MRD by RT-qPCR with a standard curve; mutated NPM1 and the fusion transcripts RUNX1::RUNX1T1, CBFB::MYH11, PML::RARA and BCR::ABL1, normalised to ABL1.",
+  "n_cycles": 40,
+  "baseline_cycles": [
+    3,
+    15
+  ],
+  "references": [
+    {
+      "name": "ABL1",
+      "family": "ABL",
+      "patterns": [
+        "\\babl\\b",
+        "c-?abl",
+        "abl ?probe",
+        "abl1"
+      ]
+    },
+    {
+      "name": "GAPDH",
+      "family": "GAPDH",
+      "patterns": [
+        "gapdh"
+      ]
+    }
+  ],
+  "noise_patterns": [
+    "^standard$",
+    "^std",
+    "°c",
+    "^[\\d.,]+$"
+  ],
+  "targets": [
+    {
+      "name": "NPM1",
+      "family": "NPM1",
+      "aliases": [
+        "npm1",
+        "npm"
+      ],
+      "patterns": [
+        "npm"
+      ],
+      "subtypes": [
+        {
+          "pattern": "npm\\s*1?\\s*(?:mut)?\\s*([abd])\\b",
+          "subtype": "NPM1_{1}"
+        }
+      ],
+      "default_subtype": "NPM1_X"
+    },
+    {
+      "name": "PML::RARA",
+      "family": "PML_RARA",
+      "aliases": [
+        "pmlrara",
+        "t1517",
+        "1517",
+        "pml"
+      ],
+      "patterns": [
+        "pml",
+        "rar",
+        "15[;,: ]?17|1517|t\\(15"
+      ],
+      "subtypes": [
+        {
+          "pattern": "bcr3",
+          "subtype": "PML_RARA_bcr3"
+        },
+        {
+          "pattern": "bcr1",
+          "subtype": "PML_RARA_bcr1"
+        },
+        {
+          "pattern": "bcr2",
+          "subtype": "PML_RARA_bcr2"
+        },
+        {
+          "pattern": "a\\s*$",
+          "subtype": "PML_RARA_bcr3"
+        },
+        {
+          "pattern": "b\\s*$",
+          "subtype": "PML_RARA_bcr1"
+        },
+        {
+          "pattern": "c\\s*$",
+          "subtype": "PML_RARA_C"
+        }
+      ],
+      "default_subtype": "PML_RARA_X"
+    },
+    {
+      "name": "RUNX1::RUNX1T1",
+      "family": "AML1_ETO",
+      "aliases": [
+        "runx1runx1t1",
+        "aml1eto",
+        "amleto",
+        "t821",
+        "821",
+        "runx1"
+      ],
+      "patterns": [
+        "aml\\s*1?[\\- ]?eto|runx1|8[;,: ]?21|t\\(8",
+        "^8_21$"
+      ],
+      "subtypes": [],
+      "default_subtype": "AML1_ETO"
+    },
+    {
+      "name": "CBFB::MYH11",
+      "family": "CBFB_MYH11",
+      "aliases": [
+        "cbfbmyh11",
+        "cbfmyh11",
+        "inv16",
+        "cbfb"
+      ],
+      "patterns": [
+        "cbf",
+        "myh",
+        "inv\\s*16"
+      ],
+      "subtypes": [
+        {
+          "pattern": "(?:myh-?\\s*11|inv\\s*16|cbfb-myh-?11?)[\\s,-]*([a-e])",
+          "subtype": "CBFB_MYH11_{1}"
+        }
+      ],
+      "default_subtype": "CBFB_MYH11_X"
+    },
+    {
+      "name": "BCR::ABL1",
+      "family": "BCR_ABL",
+      "aliases": [
+        "bcrabl1",
+        "bcrabl"
+      ],
+      "patterns": [
+        "bcr"
+      ],
+      "subtypes": [
+        {
+          "pattern": "minor|bcr1",
+          "subtype": "BCR_ABL_minor"
+        },
+        {
+          "pattern": "major",
+          "subtype": "BCR_ABL_major"
+        }
+      ],
+      "default_subtype": "BCR_ABL_X"
+    }
+  ],
+  "unknown_target_family": "OTHER",
+  "controls": {
+    "exact": [
+      "ntc",
+      "blank",
+      "leer",
+      "h2o",
+      "water",
+      "nk",
+      "pk"
+    ],
+    "prefixes": [
+      "pos",
+      "neg ",
+      "std",
+      "ntc",
+      "blank",
+      "leer",
+      "kontroll"
+    ],
+    "contains": [
+      "kontroll",
+      "control",
+      "ntc",
+      "neg ko",
+      "negko",
+      "pos ko",
+      "posko",
+      "standard",
+      "std",
+      "wasser"
+    ],
+    "tasks": []
+  },
+  "standards": {
+    "tasks": [
+      "STANDARD"
+    ],
+    "sample_prefixes": [
+      "STD"
+    ],
+    "ct_max": 45
+  },
+  "labels": {
+    "pos": {
+      "exact": [
+        "pos",
+        "positiv",
+        "positive",
+        "mrd pos",
+        "mrd positiv",
+        "mrd at low level",
+        "low level",
+        "low positive",
+        "grenzwertig pos"
+      ],
+      "prefixes": [
+        "pos"
+      ]
+    },
+    "neg": {
+      "exact": [
+        "neg",
+        "negativ",
+        "negative",
+        "mrd neg",
+        "mrd negativ",
+        "kein nachweis",
+        "n.d.",
+        "nd"
+      ],
+      "prefixes": [
+        "neg"
+      ]
+    },
+    "na": {
+      "exact": [
+        "n.a.",
+        "na",
+        "nicht auswertbar",
+        "nicht beurteilbar",
+        "invalid"
+      ],
+      "prefixes": []
+    }
+  },
+  "label_columns": {
+    "sample": [
+      "sample_id",
+      "sample",
+      "sample name",
+      "samplename",
+      "probe"
+    ],
+    "target": [
+      "target",
+      "gene",
+      "target name",
+      "detector",
+      "assay"
+    ],
+    "label": [
+      "label",
+      "class",
+      "result",
+      "y",
+      "beurteilung",
+      "beurteilung mrd"
+    ],
+    "run_file": [
+      "run_file",
+      "eds_file",
+      "rdml_file",
+      "file",
+      "filename",
+      "eds"
+    ]
+  },
+  "group_id_strip": "^H\\d{2}",
+  "ct_cap": 50,
+  "ratio_scale": 10000,
+  "qc": {
+    "ref_sufficient": 10000,
+    "ref_insufficient": 1000,
+    "r2_min": 0.95,
+    "ct_pos_max": 41,
+    "min_pos_replicates": 2,
+    "low_level_ratio": 250,
+    "decision_threshold": 0.5,
+    "enable_review": true,
+    "review_prob_lo": 0.35,
+    "review_prob_hi": 0.65,
+    "review_flag_discordant": false,
+    "review_ct_lo": 39,
+    "review_ct_hi": 42
+  },
+  "texts": {
+    "low_level": "MRD at low level",
+    "redo_material": "Repeat the assay with newly synthesised cDNA. If the reference copy number remains below the limit after re-synthesis, report as not evaluable.",
+    "redo_run": "Repeat the run (re-check the standard curve and the reference).",
+    "review": "For human classification: borderline or low-level result. The raw amplification is ambiguous and the call depends on expert judgement."
+  }
+}

@@ -1,0 +1,16 @@
+# python
+__pycache__/
+*.pyc
+*.pyo
+.ipynb_checkpoints/
+
+# packaging build artifacts (the packaged model src/qpcrpredict/data/*.pkl IS tracked)
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+
+# documentation build
+site/
+
+*.log
