@@ -1,0 +1,63 @@
+site_name: "LeukoPredict: qpcrpredict"
+site_description: Trained positive/negative calls from raw real-time PCR run files, with a packaged model for AML molecular MRD
+site_author: Joachim Wolff
+site_url: https://qpcrpredict.readthedocs.io/
+repo_url: https://github.com/MHH-Bioinformatics-Hematology/qpcrpredict
+repo_name: MHH-Bioinformatics-Hematology/qpcrpredict
+edit_uri: edit/main/docs/
+copyright: MIT License
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - content.code.copy
+    - toc.integrate
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - tables
+  - def_list
+  - toc:
+      permalink: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.details
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - Installation: installation.md
+      - Quick start: quickstart.md
+  - User guide:
+      - Input data: input.md
+      - Prediction: predict.md
+      - Output: output.md
+      - Decision logic: decision.md
+      - Assay configuration: assay.md
+      - Training: train.md
+      - Galaxy: galaxy.md
+  - Background:
+      - Features: features.md
+      - Models: models.md
+      - Performance: performance.md
+      - Public data: data.md
+  - Reference:
+      - Python API: api.md
+      - Frequently asked questions: faq.md
+      - Citation and license: citation.md
+      - Changelog: changelog.md

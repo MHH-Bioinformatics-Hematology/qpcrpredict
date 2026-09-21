@@ -1,0 +1,144 @@
+{
+  "name": "generic",
+  "description": "Template for any standard-curve qPCR assay with one reference gene. Every detector that is not a reference is treated as its own target. Adapt the reference, the control names and the thresholds to your assay.",
+  "n_cycles": 40,
+  "baseline_cycles": [
+    3,
+    15
+  ],
+  "references": [
+    {
+      "name": "REFERENCE",
+      "family": "REF",
+      "patterns": [
+        "^reference$"
+      ]
+    }
+  ],
+  "noise_patterns": [],
+  "targets": [],
+  "unknown_target_family": null,
+  "controls": {
+    "exact": [
+      "ntc",
+      "blank",
+      "water",
+      "h2o"
+    ],
+    "prefixes": [
+      "std",
+      "ntc",
+      "blank"
+    ],
+    "contains": [
+      "control",
+      "standard"
+    ],
+    "tasks": [
+      "STANDARD",
+      "NTC",
+      "NAC",
+      "NTP",
+      "NRT",
+      "POS",
+      "NEG",
+      "OPT"
+    ]
+  },
+  "standards": {
+    "tasks": [
+      "STANDARD"
+    ],
+    "sample_prefixes": [
+      "STD"
+    ],
+    "ct_max": 45
+  },
+  "labels": {
+    "pos": {
+      "exact": [
+        "pos",
+        "positive",
+        "1",
+        "true",
+        "detected"
+      ],
+      "prefixes": [
+        "pos"
+      ]
+    },
+    "neg": {
+      "exact": [
+        "neg",
+        "negative",
+        "0",
+        "false",
+        "not detected"
+      ],
+      "prefixes": [
+        "neg"
+      ]
+    },
+    "na": {
+      "exact": [
+        "na",
+        "n.a.",
+        "invalid"
+      ],
+      "prefixes": []
+    }
+  },
+  "label_columns": {
+    "sample": [
+      "sample_id",
+      "sample",
+      "sample name",
+      "samplename"
+    ],
+    "target": [
+      "target",
+      "gene",
+      "target name",
+      "detector",
+      "assay"
+    ],
+    "label": [
+      "label",
+      "class",
+      "result",
+      "y"
+    ],
+    "run_file": [
+      "run_file",
+      "eds_file",
+      "rdml_file",
+      "file",
+      "filename",
+      "eds"
+    ]
+  },
+  "group_id_strip": null,
+  "ct_cap": 50,
+  "ratio_scale": 10000,
+  "qc": {
+    "ref_sufficient": 10000,
+    "ref_insufficient": 1000,
+    "r2_min": 0.95,
+    "ct_pos_max": 40,
+    "min_pos_replicates": 2,
+    "low_level_ratio": 0,
+    "decision_threshold": 0.5,
+    "enable_review": true,
+    "review_prob_lo": 0.35,
+    "review_prob_hi": 0.65,
+    "review_flag_discordant": false,
+    "review_ct_lo": 38,
+    "review_ct_hi": 41
+  },
+  "texts": {
+    "low_level": "low-level positive",
+    "redo_material": "Repeat the measurement with new template.",
+    "redo_run": "Repeat the run (re-check the standard curve and the reference).",
+    "review": "For human classification: borderline result."
+  }
+}
