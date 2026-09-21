@@ -30,8 +30,9 @@ pretrained model, so the license applies to the bundle as well.
   the model name. The public data deposit shows this layout, see [Public data](data.md).
 
 `qpcrpredict` prints this license note when a TabPFN bundle is trained, inspected or used, and
-stores it in the bundle. `qpcrpredict predict --disallow-family tabpfn` refuses such bundles; the
-Galaxy tool always sets this option. All other model families, including the packaged `hist_gb`
+stores it in the bundle. `qpcrpredict predict --disallow-family tabpfn` refuses such bundles. The
+Galaxy tool sets this option unless the server operator has enabled TabPFN models, see
+[Galaxy](galaxy.md#tabpfn-models). All other model families, including the packaged `hist_gb`
 model, carry no such restriction. In the laboratory of the authors no TabPFN model is deployed for
 this reason. Built with PriorLabs-TabPFN.
 

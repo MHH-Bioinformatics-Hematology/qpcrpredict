@@ -36,10 +36,28 @@ A plate with two targets is handled with two tool steps on the same input datase
 Because the output is a plain table, it can be filtered with the standard text tools, for example
 to extract all rows with `decision` equal to `review` or `na`.
 
-Model bundles of the TabPFN families are refused by the Galaxy tool. The pretrained TabPFN models
-are licensed for non-commercial use only, and their license does not permit offering them as part
-of a hosted service without a commercial license from Prior Labs GmbH, see
-[License of the TabPFN families](models.md#license-of-the-tabpfn-families).
+## TabPFN models
+
+By default the Galaxy tool refuses model bundles of the TabPFN families. The pretrained TabPFN
+models are licensed for non-commercial use only, and their license does not permit making them
+available as part of a hosted service without a commercial license from Prior Labs GmbH, see
+[License of the TabPFN families](models.md#license-of-the-tabpfn-families). The operator of a
+Galaxy server is the licensee of the TabPFN weights on that server and decides whether this
+applies.
+
+An operator who is entitled to run TabPFN models, for example on an in-house server used for
+non-commercial research or with a commercial license, sets the environment variable
+`QPCRPREDICT_ALLOW_TABPFN=1` for the tool in the Galaxy job configuration:
+
+```xml
+<destination id="qpcrpredict_tabpfn" runner="local">
+    <env id="QPCRPREDICT_ALLOW_TABPFN">1</env>
+</destination>
+```
+
+The tool needs no TabPFN weights for any other model family. The `tabpfn` package is installed
+from conda as a dependency, and the weights are downloaded from Prior Labs only when a TabPFN
+model is trained or used.
 
 Training is not part of the Galaxy tool. Train a model on the command line and upload the
 resulting bundle. Upload only bundles from a source you trust, see [Training](train.md).
