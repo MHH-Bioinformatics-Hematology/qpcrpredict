@@ -42,7 +42,7 @@ this reason. Built with PriorLabs-TabPFN.
 |---|---|
 | Family | `hist_gb` |
 | Representation | `all` (26 features) |
-| Training samples | 1,897 (1,330 positive, 567 negative) |
+| Training analyses | 1,487 (1,044 positive, 443 negative) from 534 patients who agreed to the publication of their data |
 | Targets | *NPM1*, *RUNX1::RUNX1T1*, *CBFB::MYH11*, *PML::RARA*, *BCR::ABL1* |
 | Period | 2019 to 2025, single center |
 

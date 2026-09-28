@@ -32,6 +32,7 @@ One row per sample and target.
 | target | yes | `target`, `gene`, `target name`, `detector`, `assay` | target, in any spelling accepted by `--target` |
 | label | yes | `label`, `class`, `result`, `y` | `positive` or `negative`; short forms such as `pos` and `neg` are accepted |
 | run file | no | `run_file`, `eds_file`, `rdml_file`, `file`, `filename` | file name of the run that contains the sample |
+| patient | no | `patient`, `patient_id`, `group`, `cv_group` | identifier shared by all analyses of one patient; used as the grouping key of the cross-validation |
 
 Give the run file whenever a sample name can occur in more than one run. Without it, the sample is
 looked up in all run files. Rows with a label other than positive or negative are ignored. Further
@@ -51,21 +52,21 @@ Sample 2393,AML1_ETO,positive,run_0100.eds
    Rows for which no matching wells are found are counted and reported.
 2. Unless `--no-cv` is given, grouped stratified 5-fold cross-validation is run and ROC-AUC,
    PR-AUC, accuracy, precision, recall, specificity, F1, F2 and MCC are printed. Rows that share a
-   sample identifier always fall into the same fold, so repeated measurements of one sample cannot
-   leak between training and test folds.
+   patient identifier, or the sample identifier when no patient column is given, always fall into
+   the same fold, so repeated measurements of one patient cannot leak between training and test folds.
 3. The final model is fit on all labeled rows and saved.
 
 ```text
-[features] 1897 samples featurised (0 labelled rows had no matching wells)
-[fit] 1897 samples | pos=1330 neg=567 | rep=all | model=hist_gb
-[fit] patient-grouped 5-fold CV ...
-      roc_auc=0.9919  pr_auc=0.9968  accuracy=0.9668  precision=0.9788  recall=0.9737
-      specificity=0.9506  f1=0.9763  f2=0.9747  mcc=0.9211
+[features] 1487 samples featurised (0 labelled rows had no matching wells)
+[fit] 1487 samples | pos=1044 neg=443 | assay=aml_mrd | rep=all | model=hist_gb
+[fit] grouped 5-fold CV ...
+      roc_auc=0.990  pr_auc=0.996  accuracy=0.965  precision=0.974  recall=0.976
+      specificity=0.939  f1=0.975  f2=0.976  mcc=0.916
 [fit] training final model on ALL samples ...
 [fit] saved model bundle -> my_model.pkl
 ```
 
-Training on about 1,900 samples takes a few seconds with `hist_gb` on a standard workstation.
+Training on about 1,500 analyses takes a few seconds with `hist_gb` on a standard workstation.
 
 ## The model bundle
 

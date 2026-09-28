@@ -115,6 +115,12 @@
       "file",
       "filename",
       "eds"
+    ],
+    "group": [
+      "patient",
+      "patient_id",
+      "group",
+      "cv_group"
     ]
   },
   "group_id_strip": null,
@@ -141,4 +147,4 @@
     "redo_run": "Repeat the run (re-check the standard curve and the reference).",
     "review": "For human classification: borderline result."
   }
-}
+}\n

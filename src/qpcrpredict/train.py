@@ -7,9 +7,11 @@ A corpus is
         target   : target, in any spelling the assay accepts
         label    : positive or negative (other rows are ignored)
         run_file : file name inside the folder (optional; if absent every run is searched)
+        patient  : identifier shared by all analyses of one patient (optional); when present it is
+                   the grouping key of the cross-validation, otherwise the sample identifier is
 
 Features come only from the run files; the label is the training target. Rows that share a
-sample identifier are kept in one cross-validation fold. The assay configuration used for
+grouping key are kept in one cross-validation fold. The assay configuration used for
 training is stored in the model bundle, so prediction always uses the same definitions.
 """
 import os
@@ -51,6 +53,7 @@ def features_from_corpus(runs_dir, labels_path, rep, assay=None, log=print):
     gc = _pick(lab.columns, lcfg.get("target", ["target", "gene"]))
     lc = _pick(lab.columns, lcfg.get("label", ["label"]))
     fc = _pick(lab.columns, lcfg.get("run_file", ["run_file", "eds_file"]))
+    pc = _pick(lab.columns, lcfg.get("group", ["patient", "patient_id", "group", "cv_group"]))
     if sc is None or gc is None or lc is None:
         raise SystemExit(f"labels table needs sample, target and label columns; found {list(lab.columns)}")
 
@@ -97,7 +100,8 @@ def features_from_corpus(runs_dir, labels_path, rep, assay=None, log=print):
         row, cv = rec
         rows.append(row)
         curves.append(cv)
-        meta.append(dict(sample_id=sid, family=family, label=r["_label"]))
+        meta.append(dict(sample_id=sid, family=family, label=r["_label"],
+                         group=str(r[pc]).strip() if pc and str(r[pc]).strip() not in ("", "nan") else None))
         if (i + 1) % 500 == 0:
             log(f"  ...{i + 1}/{len(lab)} rows featurised")
     if not rows:
@@ -107,7 +111,10 @@ def features_from_corpus(runs_dir, labels_path, rep, assay=None, log=print):
     for c in md.columns:
         df[c] = md[c].values
     df["y"] = (df["label"] == "pos").astype(int)
-    df["group"] = df["sample_id"].map(A.group_id)
+    df["group"] = [g if g is not None else A.group_id(sid) for g, sid in zip(df["group"], df["sample_id"])]
+    n_grouped = sum(g is not None for g in md["group"])
+    if n_grouped:
+        log(f"[features] cross-validation grouped by the '{pc}' column ({n_grouped} rows; sample identifier for the rest)")
     cu = pd.DataFrame(curves)
     X, _ = F.build_features(df, cu, rep, A.ct_cap)
     log(f"[features] {len(df)} samples featurised ({miss} labelled rows had no matching wells)")
@@ -156,7 +163,7 @@ def main(argv=None):
         description="Train a positive/negative classifier from a folder of run files and a labels table.")
     ap.add_argument("--runs-dir", "--eds-dir", dest="runs_dir", required=True,
                     help="folder containing the run files (.eds or .rdml)")
-    ap.add_argument("--labels", required=True, help="labels table: sample, target, label[, run_file]")
+    ap.add_argument("--labels", required=True, help="labels table: sample, target, label[, run_file, patient]")
     ap.add_argument("--assay", default=None,
                     help="assay configuration: packaged name or JSON file (default: the packaged default assay)")
     ap.add_argument("--model", default="hist_gb",

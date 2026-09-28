@@ -271,6 +271,12 @@
       "file",
       "filename",
       "eds"
+    ],
+    "group": [
+      "patient",
+      "patient_id",
+      "group",
+      "cv_group"
     ]
   },
   "group_id_strip": "^H\\d{2}",
@@ -297,4 +303,4 @@
     "redo_run": "Repeat the run (re-check the standard curve and the reference).",
     "review": "For human classification: borderline or low-level result. The raw amplification is ambiguous and the call depends on expert judgement."
   }
-}
+}\n

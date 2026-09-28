@@ -186,3 +186,16 @@ def test_restricted_family_is_flagged_and_can_be_refused(tmp_path):
         predict(run, "NPM1", p, quiet=True, disallow_families=["tabpfn"])
     assert "Prior Labs" in str(e.value)
     assert len(predict(run, "NPM1", p, quiet=True)) == 1  # allowed when not refused
+
+
+def test_patient_column_groups_the_folds(tmp_path):
+    from qpcrpredict.train import features_from_corpus
+    rows = []
+    for i in range(6):
+        s = f"P{i}"
+        write_rdml(synthetic_run(positive=i % 2 == 0, sample=s), str(tmp_path / f"r{i}.rdml"), {"REFERENCE"})
+        rows.append(dict(sample=s, target="MYTARGET", label="positive" if i % 2 == 0 else "negative",
+                         run_file=f"r{i}.rdml", patient=f"pat{i // 2}"))
+    pd.DataFrame(rows).to_csv(tmp_path / "labels.csv", index=False)
+    df, X = features_from_corpus(str(tmp_path), str(tmp_path / "labels.csv"), "all", assay="generic", log=lambda *a: None)
+    assert list(df["group"]) == ["pat0", "pat0", "pat1", "pat1", "pat2", "pat2"]

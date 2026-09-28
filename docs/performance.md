@@ -5,42 +5,45 @@ describe agreement with the call reported by that laboratory.
 
 ## Locked temporal test
 
-The model was developed on the runs from 2019 to 2023 (1,223 samples) and evaluated once on the
-674 samples from 2024 to 2025, which were not used in any development step.
+The model was developed on the analyses from 2019 to 2023 (944 analyses, 401 patients) and
+evaluated once on the 543 analyses from 2024 to 2025 (205 patients), which were not used in any
+development step. Only patients who agreed to the publication of their data are included.
 
 | Metric | `hist_gb` |
 |---|---|
-| ROC-AUC | 0.986 |
-| PR-AUC | 0.994 |
-| F2 | 0.950 |
-| Recall | 0.942 |
-| Specificity | 0.957 |
-| Brier score | 0.048 |
+| ROC-AUC | 0.984 |
+| PR-AUC | 0.993 |
+| F2 | 0.936 |
+| Recall | 0.925 |
+| Specificity | 0.965 |
+| Brier score | 0.052 |
 
-With the quality and review gate, 91.7% of the samples received an automatic positive or negative
-call, 4.5% were deferred to review and 3.9% were marked for repetition. The automatic calls agreed
-with the laboratory in 98.1%.
+With the quality and review gate, 90.2% of the analyses received an automatic positive or negative
+call, 6.3% were deferred to review and 3.5% were marked for repetition. The automatic calls agreed
+with the laboratory in 98.6%.
 
 ## Cross-validation on all data
 
-Grouped 5-fold cross-validation over all 1,897 samples:
+Patient-grouped 5-fold cross-validation over all 1,487 analyses:
 
 | Model | Recall | Specificity | F2 | ROC-AUC |
 |---|---|---|---|---|
-| `hist_gb` | 0.974 | 0.940 | 0.974 | 0.991 |
-| `tabpfn_v26` | 0.972 | 0.951 | 0.974 | 0.991 |
-| `lightgbm` | 0.971 | 0.949 | 0.972 | 0.991 |
-| `extra_trees` | 0.971 | 0.944 | 0.972 | 0.989 |
-| `catboost` | 0.965 | 0.949 | 0.967 | 0.992 |
-| `random_forest` | 0.962 | 0.958 | 0.966 | 0.989 |
-| `logreg` | 0.943 | 0.959 | 0.950 | 0.987 |
+| `hist_gb` | 0.976 | 0.939 | 0.976 | 0.990 |
+| `tabpfn_v26` | 0.974 | 0.948 | 0.975 | 0.990 |
+| `tabpfn_v3` | 0.973 | 0.941 | 0.974 | 0.990 |
+| `extra_trees` | 0.972 | 0.937 | 0.972 | 0.989 |
+| `lightgbm` | 0.970 | 0.944 | 0.971 | 0.990 |
+| `tabpfn_v25` | 0.969 | 0.944 | 0.971 | 0.990 |
+| `catboost` | 0.964 | 0.946 | 0.966 | 0.990 |
+| `random_forest` | 0.962 | 0.946 | 0.965 | 0.987 |
+| `logreg` | 0.936 | 0.953 | 0.944 | 0.984 |
 
 ## Comparison with the replicate rule
 
 The objective replicate rule alone (at least 2 of 3 wells with Ct below 41) is more sensitive than
-the model (recall 0.987 against 0.974) and less specific (0.889 against 0.940). The rule returns
+the model (recall 0.986 against 0.976) and less specific (0.892 against 0.939). The rule returns
 only yes or no, whereas the model returns a probability that identifies the uncertain samples.
-Within the same gate, 3.2% of the samples were deferred to review with the model and 36.0% with
+Within the same gate, 3.2% of the analyses were deferred to review with the model and 36.1% with
 the rule.
 
 ## Limitations
