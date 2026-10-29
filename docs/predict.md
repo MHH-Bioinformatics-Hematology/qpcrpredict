@@ -13,7 +13,7 @@ qpcrpredict predict --run RUN --target TARGET [--model MODEL] [--assay ASSAY]
 |---|---|---|---|
 | `--run` | yes | | One run file, `.eds` or `.rdml`. `--eds` is accepted as an alias. |
 | `--target` | yes | | Target to score: a target name or alias of the assay, or a detector name as written on the plate. For the default assay: `NPM1`, `RUNX1::RUNX1T1`, `CBFB::MYH11`, `PML::RARA`, `BCR::ABL1`, and spellings such as `t(8;21)` or `inv16`. `--gene` is accepted as an alias. |
-| `--model` | no | packaged model | Model bundle (`.pkl`) written by `qpcrpredict train`. |
+| `--model` | no | `aml_mrd` | Model bundle (`.pkl`) written by `qpcrpredict train`, or the name of a packaged model: `aml_mrd` (laboratory SOP thresholds) or `aml_mrd_eln2025` (thresholds of the 2025 ELN MRD update), see [Models](models.md#the-packaged-models). |
 | `--assay` | no | from the model | Assay configuration (packaged name or JSON file) that overrides the one stored in the model bundle. |
 | `--disallow-family` | no | | Refuse model bundles of this family, for example `tabpfn`, see [License of the TabPFN families](models.md#license-of-the-tabpfn-families). May be repeated. |
 | `--sample` | no | all samples | Score only the sample with this name. The comparison ignores case. |

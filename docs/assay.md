@@ -10,6 +10,7 @@ model with that configuration.
 | Name | Content |
 |---|---|
 | `aml_mrd` | Default. AML molecular MRD: mutated *NPM1*, *RUNX1::RUNX1T1*, *CBFB::MYH11*, *PML::RARA*, *BCR::ABL1*, reference *ABL1*. This is the configuration of the packaged model. |
+| `aml_mrd_eln2025` | The same assay with the thresholds of the 2025 ELN MRD update: a well counts as amplified below Ct 40 and a negative call requires at least 10,000 *ABL1* copies. This is the configuration of the packaged `aml_mrd_eln2025` model. |
 | `generic` | Template for any standard-curve qPCR assay with one reference gene. Every detector that is not the reference is its own target. |
 
 ```bash

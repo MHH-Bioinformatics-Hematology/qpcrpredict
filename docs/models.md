@@ -36,7 +36,18 @@ Galaxy tool sets this option unless the server operator has enabled TabPFN model
 model, carry no such restriction. In the laboratory of the authors no TabPFN model is deployed for
 this reason. Built with PriorLabs-TabPFN.
 
-## The packaged model
+## The packaged models
+
+Two models are shipped. `--model` accepts a path to a bundle or the name of a packaged model.
+
+| `--model` | Labels it was trained on | Thresholds of its gate |
+|---|---|---|
+| `aml_mrd` (default) | the calls of the laboratory as reported, 2019 to 2025 | laboratory SOP: a well counts as amplified below Ct 41; a negative call needs at least 1,000 *ABL1* copies, 1,000 to 9,999 is annotated as limited |
+| `aml_mrd_eln2025` | the same calls, overridden where the 2025 ELN MRD update gives a definite different answer: at least 2 of 3 wells below Ct 40 is positive, fewer with at least 10,000 *ABL1* copies is negative, fewer with fewer copies is not evaluable and was excluded | ELN 2025: Ct 40 per well, 10,000 *ABL1* copies for a negative call |
+
+The `aml_mrd_eln2025` model was trained on 1,271 analyses (944 positive, 327 negative) of 510 patients; 216 analyses of the modeling set were not evaluable under the 2025 thresholds and 38 calls were overridden. Choose it where the laboratory reports under the 2025 update.
+
+### aml_mrd
 
 | Property | Value |
 |---|---|

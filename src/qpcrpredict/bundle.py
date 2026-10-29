@@ -19,6 +19,18 @@ def default_model_path():
     return _DEFAULT if os.path.exists(_DEFAULT) else None
 
 
+def packaged_models():
+    """Names of the models shipped inside the package (``aml_mrd``, ``aml_mrd_eln2025``)."""
+    d = os.path.join(_HERE, "data")
+    return sorted(f[:-len("_model.pkl")] for f in os.listdir(d) if f.endswith("_model.pkl"))
+
+
+def packaged_model_path(name):
+    """Path of a packaged model given its name, or None."""
+    p = os.path.join(_HERE, "data", f"{name}_model.pkl")
+    return p if os.path.exists(p) else None
+
+
 def load_bundle(path=None):
     """Load a bundle. If path is None, fall back to the packaged default model."""
     if path is None:
@@ -26,7 +38,10 @@ def load_bundle(path=None):
         if path is None:
             raise SystemExit("no model given and no packaged default model found; pass --model")
     if not os.path.exists(path):
-        raise SystemExit(f"model bundle not found: {path}")
+        packaged = packaged_model_path(path)
+        if packaged is None:
+            raise SystemExit(f"model bundle not found: {path} (packaged models: {', '.join(packaged_models())})")
+        path = packaged
     b = joblib.load(path)
     if not isinstance(b, dict) or "pipeline" not in b:
         raise SystemExit(f"{path} is not a model bundle")

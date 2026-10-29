@@ -169,6 +169,20 @@ def test_packaged_model_predicts():
     assert 0.0 <= p <= 1.0
 
 
+def test_packaged_eln2025_model_loads_by_name():
+    from qpcrpredict.bundle import packaged_models, load_bundle, bundle_assay
+    if "aml_mrd_eln2025" not in packaged_models():
+        pytest.skip("no packaged ELN 2025 model")
+    b = load_bundle("aml_mrd_eln2025")
+    a = bundle_assay(b)
+    assert a.name == "aml_mrd_eln2025"
+    assert float(a.qc["ct_pos_max"]) == 40.0 and float(a.qc["ref_insufficient"]) == 10000.0
+    run = complete_run(synthetic_run(reference="ABL", target="NPM1 mut A"), a)
+    row, curves = F.sample_feature_record(run, "S1", "NPM1", a)
+    X, _ = F.build_features(pd.DataFrame([row]), pd.DataFrame([curves]), b["rep"], a.ct_cap)
+    assert 0.0 <= b["pipeline"].predict_proba(X)[0, 1] <= 1.0
+
+
 def test_restricted_family_is_flagged_and_can_be_refused(tmp_path):
     import joblib
     from qpcrpredict.models import license_note

@@ -9,6 +9,7 @@
   cycle number, thresholds and texts are defined in a JSON file and stored in the model bundle.
   Packaged configurations `aml_mrd` (default) and `generic`.
 - Packaged default model (`hist_gb`, 26 features, 1,487 training analyses of 534 patients) for AML molecular MRD.
+- Second packaged model `aml_mrd_eln2025` and assay configuration of the same name with the thresholds of the 2025 ELN MRD update (Ct 40 per well, 10,000 *ABL1* copies for a negative call); `--model` accepts the name of a packaged model.
 - Four-way decision with the quality and review gate.
 - License note for the TabPFN families; `--disallow-family` refuses bundles of a model family.
 - Bioconda package (Linux and macOS) with all model families included.
