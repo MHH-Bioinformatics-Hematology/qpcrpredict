@@ -108,6 +108,7 @@ _COMMANDS = {
     "assay": "list, print or check assay configurations",
     "convert": "convert a run file to RDML",
     "info": "show package and model information",
+    "report": "HTML report from one or more prediction tables",
 }
 
 
@@ -142,6 +143,9 @@ def main(argv=None):
         return _convert(rest)
     if cmd == "info":
         return _info(rest)
+    if cmd == "report":
+        from .report import main as m
+        return m(rest)
     parser.print_help()
     return 1
 

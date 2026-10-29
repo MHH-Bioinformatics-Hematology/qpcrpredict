@@ -27,6 +27,9 @@ Linux and macOS. All dependencies, including the optional model families, come w
 # score every sample of one target in a run (.eds or .rdml) with a released or own model bundle
 qpcrpredict predict --run run.eds --target NPM1 --model aml_mrd.pkl --out calls.tsv
 
+# one HTML report for several runs, with the amplification curves
+qpcrpredict report calls.tsv more_calls.tsv --run run.eds --run more.eds --out report.html
+
 # train a model from run files and a labels table (sample, target, label[, run_file])
 qpcrpredict train --runs-dir runs/ --labels labels.csv --out model.pkl
 

@@ -47,6 +47,7 @@ nav:
       - Input data: input.md
       - Prediction: predict.md
       - Output: output.md
+      - HTML report: report.md
       - Decision logic: decision.md
       - Assay configuration: assay.md
       - Training: train.md

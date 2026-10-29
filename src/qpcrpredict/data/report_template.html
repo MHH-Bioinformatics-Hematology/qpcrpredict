@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script>(function(){var d=document.documentElement,t;try{t=localStorage.getItem('qpcr-theme');}catch(e){}if(!t)t='light';d.setAttribute('data-theme',t);})();</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>qPCR report</title>
+<style>
+:root {
+  --bg:#f5f5f7; --surface:#ffffff; --surface-2:#f5f5f7; --border:#e3e3e8;
+  --text:#1d1d1f; --muted:#6e6e73; --brand:#0071e3;
+  --pass:#34c759; --warn:#ff9f0a; --fail:#ff3b30; --none:#aeaeb2; --grid:#e8e8ed;
+  --header-bg:rgba(255,255,255,.72);
+  --shadow:0 8px 30px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.05);
+  --radius:18px; --sidebar-w:17em;
+}
+:root[data-theme="dark"] {
+  --bg:#000000; --surface:#1c1c1e; --surface-2:#2c2c2e; --border:#38383a;
+  --text:#f5f5f7; --muted:#98989d; --brand:#0a84ff;
+  --pass:#30d158; --warn:#ff9f0a; --fail:#ff453a; --none:#636366; --grid:#2c2c2e;
+  --header-bg:rgba(28,28,30,.72);
+  --shadow:0 8px 30px rgba(0,0,0,.5),0 1px 2px rgba(0,0,0,.6);
+}
+* { box-sizing:border-box; }
+/* --scale: report font size chosen with the A- / A+ buttons; every size in rem / em follows it */
+html { scroll-behavior:smooth; --scale:1; --hdr:0px; font-size:calc(16px * var(--scale)); }
+body {
+  color:var(--text); margin:0; background:var(--bg);
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  font-size:.9375rem; line-height:1.55; -webkit-font-smoothing:antialiased;
+  -webkit-print-color-adjust:exact; print-color-adjust:exact;
+}
+a { color:var(--brand); text-decoration:none; }
+.mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+div.header {
+  position:sticky; top:0; z-index:20; display:flex; align-items:center; justify-content:space-between;
+  gap:1em; flex-wrap:wrap; background:var(--header-bg); border-bottom:1px solid var(--border);
+  -webkit-backdrop-filter:saturate(180%) blur(20px); backdrop-filter:saturate(180%) blur(20px);
+  padding:.8em 1.6em;
+}
+#title { font-size:1.5rem; font-weight:700; letter-spacing:-.022em; }
+#subtitle { font-size:.82rem; color:var(--muted); font-family:ui-monospace,SFMono-Regular,Menlo,monospace; text-align:right; }
+.tools { display:flex; align-items:center; gap:.5em; flex-wrap:wrap; }
+input[type=search], select.sel {
+  border:1px solid var(--border); background:var(--surface-2); color:var(--text); border-radius:999px;
+  height:2.1em; padding:0 .9em; font:inherit; font-size:.85rem;
+}
+input[type=search] { min-width:16em; max-width:100%; }
+select.sel { max-width:100%; min-width:0; }
+.chartbar label { min-width:0; max-width:100%; }
+button.chip {
+  border:1px solid var(--border); background:var(--surface-2); color:var(--text); border-radius:999px;
+  height:2.1em; padding:0 .9em; font:inherit; font-size:.8rem; font-weight:600; cursor:pointer;
+}
+button.chip.on { background:var(--brand); border-color:var(--brand); color:#fff; }
+.tabs { display:inline-flex; background:var(--surface-2); border:1px solid var(--border); border-radius:999px; padding:3px; gap:2px; }
+.tabs button { border:0; background:transparent; color:var(--text); border-radius:999px; padding:.3em 1.1em; font:inherit; font-size:.88rem; font-weight:650; cursor:pointer; }
+.tabs button.on { background:var(--surface); box-shadow:0 1px 3px rgba(0,0,0,.15); color:var(--brand); }
+.f1 { background:#c7c7cc; } .f2 { background:#8ec5ff; } .f3 { background:#4ea1f5; } .f4 { background:#1e7ae0; } .f5 { background:#0f5bb5; } .f6 { background:#0a3d7a; }
+:root[data-theme="dark"] .f1 { background:#48484a; }
+.swatch { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:-1px; }
+div.summary {
+  position:fixed; top:4.4em; left:0; width:var(--sidebar-w); height:calc(100vh - 4.4em);
+  overflow-y:auto; padding:1em .9em;
+}
+div.summary h2 { font-size:.72rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); font-weight:700; margin:.2em 0 .7em .5em; }
+div.summary ul { padding:0; margin:0 0 1.2em; list-style:none; }
+div.summary li a {
+  display:flex; align-items:center; gap:.6em; padding:.4em .7em; margin-bottom:2px; border-radius:8px;
+  color:var(--text); font-size:.88rem; font-weight:500;
+}
+div.summary li a.pat { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+div.summary li a:hover { background:var(--surface-2); }
+div.summary li a .n { margin-left:auto; color:var(--muted); font-size:.75rem; }
+.dot { flex:0 0 auto; width:9px; height:9px; border-radius:50%; background:var(--none); display:inline-block; }
+.dot.pass { background:var(--pass); box-shadow:0 0 0 3px rgba(52,199,89,.16); }
+.dot.rev { background:var(--warn); box-shadow:0 0 0 3px rgba(255,159,10,.16); }
+.dot.qc { background:var(--fail); box-shadow:0 0 0 3px rgba(255,59,48,.16); }
+.dot.neg { width:auto; min-width:22px; height:14px; padding:0 3px; border-radius:7px; background:var(--pass); color:#fff; font:800 9px/14px -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; text-align:center; letter-spacing:.02em; box-shadow:0 0 0 3px rgba(52,199,89,.16); }
+.dot.neg::before { content:"ND"; }
+.dot.np { width:14px; height:14px; background:var(--fail); color:#fff; font:800 10px/14px -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; text-align:center; box-shadow:0 0 0 3px rgba(255,59,48,.16); }
+.dot.np::before { content:"!"; }
+.slot { flex:0 0 26px; display:inline-flex; justify-content:center; }
+div.main { margin-left:max(var(--sidebar-w), calc((100% - 1240px) / 2)); margin-right:auto; padding:1.5em 2em 3em; max-width:1240px; }
+div.module {
+  background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+  box-shadow:var(--shadow); padding:1.2em 1.6em 1.4em; margin-bottom:1.4em; scroll-margin-top:5em;
+}
+div.module > h2 {
+  display:flex; align-items:center; gap:.6em; flex-wrap:wrap; font-size:1.1rem; font-weight:650;
+  margin:0 0 .9em; padding:0 0 .65em; border-bottom:1px solid var(--border); cursor:pointer; user-select:none;
+}
+div.module > h2 .sub { color:var(--muted); font-size:.8rem; font-weight:500; }
+div.module > h2::after {
+  content:""; margin-left:auto; width:.5em; height:.5em; border-right:2px solid var(--muted);
+  border-bottom:2px solid var(--muted); transform:rotate(45deg); transition:transform .15s;
+}
+div.module.collapsed > h2 { margin-bottom:0; padding-bottom:0; border-bottom:0; }
+div.module.collapsed > h2::after { transform:rotate(-45deg); }
+div.module.collapsed > :not(h2) { display:none; }
+p.note { color:var(--muted); font-size:.82rem; margin:.1em 0 .9em; max-width:95ch; overflow-wrap:anywhere; }
+.stats { display:flex; gap:.8em; flex-wrap:wrap; margin-bottom:1em; }
+.stat { background:var(--surface-2); border-radius:12px; padding:.6em 1em; min-width:8.5em; }
+.stat b { display:block; font-size:1.5rem; font-variant-numeric:tabular-nums; }
+.stat span { color:var(--muted); font-size:.78rem; }
+/* tables scroll inside their box, the column headers stay visible */
+.tablewrap { overflow:auto; max-height:max(60vh, calc(100vh - var(--hdr) - 2.5rem)); overscroll-behavior:contain; }
+table { border-collapse:collapse; width:100%; font-size:.85rem; border:1px solid var(--border); }
+th {
+  background:var(--surface-2); color:var(--muted); text-align:left; text-transform:uppercase;
+  font-size:.68rem; letter-spacing:.04em; font-weight:700; padding:.55em .8em; border-bottom:1px solid var(--border);
+  position:sticky; top:0; z-index:2; box-shadow:0 1px 0 var(--border);
+}
+th.sort { cursor:pointer; white-space:nowrap; } th.sort:hover { color:var(--brand); }
+td {
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace; padding:.48em .8em; border-bottom:1px solid var(--border);
+  vertical-align:top; overflow-wrap:anywhere;
+}
+td.nw { white-space:nowrap; }
+td.why { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; font-size:.8rem; min-width:16em; }
+td.num { text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap; }
+td.low { color:var(--fail); font-weight:700; }
+tr.row { cursor:pointer; }
+tr.row:hover td, tr.row.hl td { background:var(--surface-2); }
+tr.detail > td { background:var(--surface-2); padding:1em 1.2em; }
+table.wide td, table.wide th { white-space:nowrap; }
+table.wide td:first-child, table.wide th:first-child { position:sticky; left:0; z-index:1; }
+table.wide th:first-child { z-index:3; }
+.fontsize { display:inline-flex; border:1px solid var(--border); border-radius:999px; overflow:hidden; }
+.fontsize button { border:0; background:var(--surface-2); color:var(--text); font:inherit; font-size:.85rem; padding:.3em .65em; cursor:pointer; }
+.fontsize button + button { border-left:1px solid var(--border); }
+.fontsize button:disabled { color:var(--muted); cursor:default; }
+table.wide td:first-child { background:var(--surface); }
+.badge {
+  display:inline-block; border-radius:999px; padding:.05em .7em; font-size:.75rem; font-weight:700;
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; white-space:nowrap;
+}
+.badge.pass { background:rgba(52,199,89,.16); color:var(--pass); }
+.badge.warn { background:rgba(255,159,10,.18); color:var(--warn); }
+.badge.fail { background:rgba(255,59,48,.14); color:var(--fail); }
+.badge.none { background:rgba(142,142,147,.16); color:var(--muted); }
+.badge.rev { background:rgba(255,159,10,.18); color:var(--warn); }
+.badge.qc, .badge.np { background:rgba(255,59,48,.14); color:var(--fail); }
+.badge.neg { background:rgba(52,199,89,.10); color:var(--pass); border:1px dashed rgba(52,199,89,.6); }
+.groups { display:grid; grid-template-columns:repeat(auto-fill,minmax(19em,1fr)); gap:.9em; }
+.group { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:.7em .9em; min-width:0; }
+.group h3 { margin:0 0 .4em; font-size:.72rem; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); }
+.kv { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); gap:.15em .8em; font-size:.8rem; }
+.kv .k { color:var(--muted); overflow-wrap:anywhere; }
+.kv .v { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; overflow-wrap:anywhere; }
+.qcbars { display:grid; grid-template-columns:minmax(10em,16em) minmax(0,1fr) 6.5em; gap:.25em .8em; align-items:center; font-size:.78rem; }
+.qcbars .k { color:var(--muted); }
+.qcbars .track { position:relative; height:10px; background:var(--grid); border-radius:5px; }
+.qcbars .fill { position:absolute; left:0; top:0; bottom:0; border-radius:5px; background:var(--brand); }
+.qcbars .fill.low { background:var(--fail); }
+.qcbars .thr { position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--text); opacity:.55; }
+.qcbars .med { position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--warn); }
+.qcbars .v { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; text-align:right; }
+pre.aln { font-size:.75rem; overflow-x:auto; margin:.4em 0 0; }
+.hidden, div.module.off { display:none !important; }
+div.summary li a.on { background:var(--surface-2); font-weight:600; }
+.chartbar { display:flex; gap:.6em; align-items:center; flex-wrap:wrap; margin:.2em 0 .6em; font-size:.82rem; color:var(--muted); }
+.chartbar label { display:inline-flex; gap:.35em; align-items:center; }
+.chart { width:100%; min-height:300px; position:relative; }
+.chart svg { display:block; width:100%; height:auto; overflow:visible; }
+.chart text { fill:var(--muted); font-size:calc(11px * var(--scale)); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+.chart .gridline { stroke:var(--grid); stroke-width:1; }
+.chart .axis { stroke:var(--border); stroke-width:1; }
+.chart .thrline { stroke:var(--fail); stroke-width:1.5; stroke-dasharray:5 4; }
+.chart .medline { stroke:var(--warn); stroke-width:1.5; stroke-dasharray:2 3; }
+.chart circle { cursor:pointer; stroke:var(--surface); stroke-width:1.5; }
+.chart circle:hover { stroke:var(--text); stroke-width:2; }
+.chart rect.bar { cursor:pointer; }
+.chart rect.bar:hover { opacity:.75; }
+.legend { display:flex; gap:1em; flex-wrap:wrap; font-size:.78rem; color:var(--muted); margin-top:.3em; }
+.legend > span { display:inline-flex; gap:.35em; align-items:center; }
+#tip {
+  position:fixed; z-index:50; pointer-events:none; background:var(--surface); color:var(--text);
+  border:1px solid var(--border); border-radius:10px; box-shadow:var(--shadow); padding:.45em .7em;
+  font-size:.8rem; max-width:22em; display:none;
+}
+#tip b { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
+.colpick { display:grid; grid-template-columns:repeat(auto-fill,minmax(16em,1fr)); gap:.15em .8em; font-size:.8rem; max-height:16em; overflow-y:auto; border:1px solid var(--border); border-radius:10px; padding:.6em .8em; margin:.4em 0 .8em; }
+.colpick label { display:flex; gap:.4em; align-items:center; overflow-wrap:anywhere; }
+button.theme-toggle {
+  border:1px solid var(--border); background:var(--surface-2); color:var(--text); border-radius:999px;
+  width:2.1em; height:2.1em; cursor:pointer; font-size:1rem;
+}
+mark { background:rgba(255,159,10,.35); color:inherit; border-radius:3px; }
+div.footer { color:var(--muted); font-size:.78rem; padding:1em 0; }
+button#navtoggle {
+  display:none; align-items:center; gap:.5em; margin:.8em .8em .6em; width:calc(100% - 1.6em); padding:.55em .8em;
+  border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); color:var(--text);
+  font:inherit; font-size:.9rem; cursor:pointer; text-align:left;
+}
+button#navtoggle .chev { margin-left:auto; color:var(--muted); }
+@media (max-width:860px) {
+  /* narrow screens: the contents and patient list fold into a bar above the content, closed by default */
+  div.summary { position:static; width:auto; height:auto; margin:0 .8em .8em; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); display:none; }
+  body.navopen div.summary { display:block; }
+  button#navtoggle { display:flex; }
+  div.main { margin-left:0; padding:1em; }
+  .qcbars { grid-template-columns:minmax(0,1fr) minmax(0,1fr) 5.5em; }
+}
+@media print {
+  .tablewrap { max-height:none; overflow:visible; } th { position:static; }
+  div.header { position:static; } div.summary, .tools, .chartbar { display:none; }
+  div.main { margin-left:0; max-width:none; } div.module { break-inside:avoid; box-shadow:none; }
+}
+
+/* qpcrpredict report */
+.dot.pos { background:var(--fail); box-shadow:0 0 0 3px rgba(255,59,48,.16); }
+.dot.negc { background:var(--pass); box-shadow:0 0 0 3px rgba(52,199,89,.16); }
+.dot.rev { background:var(--warn); }
+.dot.nd { background:var(--none); box-shadow:0 0 0 3px rgba(142,142,147,.2); }
+.badge.pos { background:rgba(255,59,48,.14); color:var(--fail); }
+.badge.negc { background:rgba(52,199,89,.16); color:var(--pass); }
+.badge.nd { background:rgba(142,142,147,.16); color:var(--muted); }
+.curves { display:grid; grid-template-columns:repeat(auto-fit,minmax(16em,24em)); gap:1em; align-items:start; }
+.curves svg { width:100%; max-width:24em; height:auto; display:block; overflow:visible; }
+.curves text { font-size:9px; fill:var(--muted); font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+.curves .gridline { stroke:var(--grid); stroke-width:1; }
+tr.detail .kv { grid-template-columns:minmax(0,1fr) minmax(0,1.6fr); }
+tr.detail .kv .k, tr.detail .kv .v, tr.detail .lbl { white-space:normal; }
+tr.detail .groups, tr.detail .lbl { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; }
+.curves .lbl { font-size:.75rem; color:var(--muted); margin-bottom:.2em; }
+.curves .t { stroke:#0072B2; } .curves .r { stroke:#D55E00; }
+.prob { display:inline-block; width:6em; height:8px; background:var(--grid); border-radius:4px; vertical-align:middle; margin-right:.4em; position:relative; }
+.prob i { position:absolute; left:0; top:0; bottom:0; border-radius:4px; background:var(--brand); }
+.prob b { position:absolute; top:-3px; bottom:-3px; width:2px; background:var(--text); opacity:.5; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div style="display:flex;align-items:center;gap:1em;flex-wrap:wrap"><div id="title">qPCR report</div></div>
+  <div class="tools">
+    <input type="search" id="q" placeholder="Search (sample, target, run, reason, ...)">
+    <button class="chip" data-f="all">All</button>
+    <button class="chip" data-f="pos"><span class="dot pos"></span> Positive</button>
+    <button class="chip" data-f="negc"><span class="dot negc"></span> Negative</button>
+    <button class="chip" data-f="rev"><span class="dot rev"></span> Review</button>
+    <button class="chip" data-f="nd"><span class="dot nd"></span> n.d.</button>
+    <span class="fontsize" role="group" aria-label="Font size"><button id="fs-dn" title="Smaller font">A&minus;</button><button id="fs-0" title="Default font size">A</button><button id="fs-up" title="Larger font">A+</button></span>
+    <button class="theme-toggle" id="theme" title="Light / dark">&#9681;</button>
+  </div>
+  <div id="subtitle"></div>
+</div>
+<button id="navtoggle" aria-expanded="false" aria-controls="nav"><span id="navtoggle-label">Contents and runs</span><span class="chev">&#9662;</span></button>
+<div class="summary" id="nav"></div>
+<div class="main" id="main"></div>
+<div id="tip"></div>
+<script id="qpcr-data" type="application/json">
+__DATA__
+</script>
+<script>
+(function () {
+  var D = JSON.parse(document.getElementById('qpcr-data').textContent);
+  var H = D.header, R = D.rows, RUNS = D.runs || {}, CURVES = D.curves || {};
+  function col(n) { return H.indexOf(n); }
+  function g(r, n) { var i = col(n); return i < 0 ? '' : (r[i] === undefined ? '' : r[i]); }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function num(v) { if (v === '' || v === undefined || v === null) return null; var x = parseFloat(v); return isFinite(x) ? x : null; }
+  function store(k, v) { try { if (v === undefined) return JSON.parse(localStorage.getItem('qpcr-' + k)); localStorage.setItem('qpcr-' + k, JSON.stringify(v)); } catch (e) { return null; } }
+  var CLS = {pos:'positive', negc:'negative', rev:'review', nd:'n.d.', np:'not found'};
+  function cls(r) { var d = g(r, 'decision'); return d === 'positive' ? 'pos' : d === 'negative' ? 'negc' : d === 'review' ? 'rev' : d === 'na' ? 'nd' : 'np'; }
+  function callWord(r) { var c = g(r, 'call'); return c || CLS[cls(r)]; }
+  function badge(r) { var c = cls(r); return '<span class="dot ' + c + '" style="margin-right:.45em;vertical-align:-1px"></span><span class="badge ' + c + '">' + esc(callWord(r)) + '</span>'; }
+  function f3(v) { var x = num(v); return x === null ? '' : x.toFixed(3); }
+  function f1(v) { var x = num(v); return x === null ? '' : x.toFixed(1); }
+  function fint(v) { var x = num(v); return x === null ? '' : Math.round(x).toLocaleString('en-US'); }
+  function fratio(v) { var x = num(v); if (x === null) return ''; return (x >= 100 ? x.toFixed(0) : x >= 1 ? x.toFixed(2) : x.toExponential(2)); }
+  function probBar(r) { var p = num(g(r, 'ml_prob')); if (p === null) return ''; return '<span class="prob"><i style="width:' + (p * 100).toFixed(0) + '%"></i><b style="left:50%"></b></span>' + p.toFixed(3); }
+  function runKey(r) { return g(r, 'run_file') || g(r, 'run_date') || 'run'; }
+  // ---- grouping by run
+  var byRun = {}, order = [];
+  R.forEach(function (r, i) { var k = runKey(r); if (!byRun[k]) { byRun[k] = []; order.push(k); } byRun[k].push(i); });
+  var filter = store('filter') || 'all', query = '';
+  function visible(i) {
+    var r = R[i]; if (filter !== 'all' && cls(r) !== filter) return false;
+    if (!query) return true; var s = r.join(' ').toLowerCase(); return s.indexOf(query) >= 0;
+  }
+  function counts(idx) { var c = {pos:0, negc:0, rev:0, nd:0, np:0}; idx.forEach(function (i) { c[cls(R[i])]++; }); return c; }
+  // ---- rendering
+  var COLS = [
+    {h:'Sample', f:function (r) { return '<span class="mono">' + esc(g(r, 'sample')) + '</span>'; }},
+    {h:'Target', f:function (r) { return esc(g(r, 'target')); }},
+    {h:'Call', f:badge, k:'decision'},
+    {h:'p(positive)', f:probBar, k:'ml_prob', num:true},
+    {h:'Model alone', f:function (r) { return esc(g(r, 'model_call')); }},
+    {h:'Target Ct mean', f:function (r) { return f1(g(r, 'tg_ct_mean')); }, k:'tg_ct_mean', num:true},
+    {h:'Wells below cutoff', f:function (r) { return esc(g(r, 'tg_n_below_cutoff')); }, k:'tg_n_below_cutoff', num:true},
+    {h:'Reference copies', f:function (r) { return fint(g(r, 'ref_qty_mean')); }, k:'ref_qty_mean', num:true},
+    {h:'Ratio per 10<sup>4</sup>', f:function (r) { return fratio(g(r, 'ratio')); }, k:'ratio', num:true},
+    {h:'Material', f:function (r) { return esc(g(r, 'quality')); }},
+    {h:'Why', f:function (r) { return esc([g(r, 'reason'), g(r, 'review_reason'), g(r, 'annotation')].filter(Boolean).join('; ')); }, why:true}
+  ];
+  function svgCurves(key) {
+    var c = CURVES[key]; if (!c) return '';
+    function one(label, wells, klass, cts) {
+      var W = 320, Hh = 160, px = 34, py = 10, n = c.cycles, all = [].concat.apply([], wells), mx = Math.max.apply(null, all.concat([1e-6])), mn = Math.min.apply(null, all.concat([0]));
+      function X(i) { return px + (i) * (W - px - 6) / (n - 1); } function Y(v) { return Hh - py - 12 - (v - mn) * (Hh - 2 * py - 12) / (mx - mn || 1); }
+      var s = '<div><div class="lbl">' + label + (cts && cts.length ? ' &middot; Ct ' + cts.map(function (x) { return x === null ? 'undet.' : x.toFixed(1); }).join(', ') : '') + '</div><svg viewBox="0 0 ' + W + ' ' + Hh + '">';
+      [0, 0.5, 1].forEach(function (t) { var y = Y(mn + t * (mx - mn)); s += '<line class="gridline" x1="' + px + '" x2="' + (W - 6) + '" y1="' + y + '" y2="' + y + '"/><text x="' + (px - 4) + '" y="' + (y + 4) + '" text-anchor="end">' + (mn + t * (mx - mn)).toFixed(2) + '</text>'; });
+      [1, 10, 20, 30, n].forEach(function (cy) { s += '<text x="' + X(cy - 1) + '" y="' + (Hh - 2) + '" text-anchor="middle">' + cy + '</text>'; });
+      wells.forEach(function (w, wi) { var d = w.map(function (v, i) { return (i ? 'L' : 'M') + X(i).toFixed(1) + ' ' + Y(v).toFixed(1); }).join(''); s += '<path class="' + klass + '" d="' + d + '" fill="none" stroke-width="1.4" opacity=".85"/>';
+        if (cts && cts[wi] !== null && cts[wi] !== undefined && cts[wi] < n) s += '<line class="' + klass + '" x1="' + X(cts[wi] - 1) + '" x2="' + X(cts[wi] - 1) + '" y1="' + (Hh - py - 12) + '" y2="' + (Hh - py - 20) + '" stroke-width="2"/>'; });
+      return s + '</svg></div>';
+    }
+    return '<div class="curves">' + one('Target wells (&Delta;R<sub>n</sub>)', c.target, 't', c.target_ct) + one('Reference wells (&Delta;R<sub>n</sub>)', c.reference, 'r', c.reference_ct) + '</div>';
+  }
+  function detail(i) {
+    var r = R[i], kv = [['Decision', callWord(r)], ['Model probability', f3(g(r, 'ml_prob'))], ['Model call alone', g(r, 'model_call')], ['Reason', g(r, 'reason')], ['Why review', g(r, 'review_reason')], ['Annotation', g(r, 'annotation')], ['Recommended action', g(r, 'recommendation')], ['Standard curve R² target / reference', f3(g(r, 'r2_target')) + ' / ' + f3(g(r, 'r2_ref'))], ['Run date', g(r, 'run_date')], ['Run file', g(r, 'run_file')]];
+    var h = '<div class="groups"><div class="group"><h3>Decision</h3><div class="kv">' + kv.filter(function (p) { return p[1] !== ''; }).map(function (p) { return '<div class="k">' + esc(p[0]) + '</div><div class="v">' + esc(p[1]) + '</div>'; }).join('') + '</div></div></div>';
+    var key = runKey(r) + '\u0000' + g(r, 'sample').toUpperCase() + '\u0000' + g(r, 'family');
+    var cv = svgCurves(key); if (cv) h += '<div style="margin-top:.8em">' + cv + '</div>';
+    return h;
+  }
+  function table(idx) {
+    var sortK = store('sort') || null, sortD = store('sortd') || 1;
+    var rows = idx.filter(visible);
+    if (sortK) { var c = COLS.filter(function (x) { return x.k === sortK; })[0]; rows.sort(function (a, b) { var va = g(R[a], sortK), vb = g(R[b], sortK); if (c && c.num) { va = num(va); vb = num(vb); va = va === null ? -1e99 : va; vb = vb === null ? -1e99 : vb; return (va - vb) * sortD; } return String(va).localeCompare(String(vb)) * sortD; }); }
+    var h = '<div class="tablewrap"><table class="wide"><thead><tr>' + COLS.map(function (c) { return '<th' + (c.k ? ' class="sort" data-k="' + c.k + '"' : '') + '>' + c.h + (c.k === sortK ? (sortD > 0 ? ' &#9650;' : ' &#9660;') : '') + '</th>'; }).join('') + '</tr></thead><tbody>';
+    rows.forEach(function (i) { var r = R[i]; h += '<tr class="row" data-i="' + i + '">' + COLS.map(function (c) { return '<td class="' + (c.num ? 'num' : c.why ? 'why' : 'nw') + '">' + c.f(r) + '</td>'; }).join('') + '</tr><tr class="detail hidden" data-for="' + i + '"><td colspan="' + COLS.length + '">' + detail(i) + '</td></tr>'; });
+    if (!rows.length) h += '<tr><td colspan="' + COLS.length + '" class="why">No analysis matches the filter.</td></tr>';
+    return h + '</tbody></table></div>';
+  }
+  function stats(idx) {
+    var c = counts(idx); var auto = c.pos + c.negc;
+    return '<div class="stats"><div class="stat"><b>' + idx.length + '</b><span>analyses</span></div><div class="stat"><b>' + c.pos + '</b><span>positive</span></div><div class="stat"><b>' + c.negc + '</b><span>negative</span></div><div class="stat"><b>' + c.rev + '</b><span>review</span></div><div class="stat"><b>' + c.nd + '</b><span>n.d. (repeat)</span></div><div class="stat"><b>' + (idx.length ? Math.round(100 * auto / idx.length) : 0) + '%</b><span>called automatically</span></div></div>';
+  }
+  function runInfo(k) {
+    var m = RUNS[k] || {}, kv = [];
+    if (m.run_date) kv.push(['Run date', m.run_date]); if (m.assay) kv.push(['Assay', m.assay]); if (m.model) kv.push(['Model', m.model]);
+    if (m.r2) Object.keys(m.r2).forEach(function (t) { kv.push(['Standard curve R² ' + t, Number(m.r2[t]).toFixed(3)]); });
+    if (!kv.length) return '';
+    return '<div class="groups" style="margin-bottom:.8em"><div class="group"><h3>Run</h3><div class="kv">' + kv.map(function (p) { return '<div class="k">' + esc(p[0]) + '</div><div class="v">' + esc(p[1]) + '</div>'; }).join('') + '</div></div></div>';
+  }
+  function render() {
+    var main = document.getElementById('main'), nav = document.getElementById('nav'), h = '', n = '';
+    var allIdx = R.map(function (_, i) { return i; });
+    h += '<div class="module" id="overview"><h2>Overview <span class="sub">' + order.length + ' run' + (order.length === 1 ? '' : 's') + '</span></h2>' + stats(allIdx.filter(visible)) + '<p class="note">Calls of the model and the quality and review gate. Positive and negative are automatic calls; review needs a scientist; n.d. is a run that cannot be evaluated and is repeated. Every plate is approved by a scientist. Click a row for the reasons and the amplification curves.</p></div>';
+    n += '<h2>Contents</h2><ul><li><a href="#overview">Overview</a></li></ul><h2>Runs</h2><ul>';
+    order.forEach(function (k, ri) {
+      var idx = byRun[k], c = counts(idx), vis = idx.filter(visible).length;
+      h += '<div class="module' + (vis ? '' : ' off') + '" id="run-' + ri + '"><h2>' + esc(k) + ' <span class="sub">' + idx.length + ' analyses &middot; ' + c.pos + ' positive, ' + c.negc + ' negative, ' + c.rev + ' review, ' + c.nd + ' n.d.</span></h2>' + runInfo(k) + table(idx) + '</div>';
+      n += '<li><a href="#run-' + ri + '" class="pat"><span class="dot ' + (c.rev ? 'rev' : c.pos ? 'pos' : c.nd ? 'nd' : 'negc') + '"></span>' + esc(k) + '<span class="n">' + vis + '/' + idx.length + '</span></a></li>';
+    });
+    h += '<div class="footer">' + esc(D.footer || '') + '</div>';
+    main.innerHTML = h; nav.innerHTML = n + '</ul>';
+    main.querySelectorAll('tr.row').forEach(function (tr) { tr.addEventListener('click', function () { var d = main.querySelector('tr.detail[data-for="' + tr.dataset.i + '"]'); d.classList.toggle('hidden'); tr.classList.toggle('hl'); }); });
+    main.querySelectorAll('th.sort').forEach(function (th) { th.addEventListener('click', function () { var k = th.dataset.k; if (store('sort') === k) store('sortd', -(store('sortd') || 1)); else { store('sort', k); store('sortd', 1); } render(); }); });
+    main.querySelectorAll('div.module > h2').forEach(function (h2) { h2.addEventListener('click', function () { h2.parentNode.classList.toggle('collapsed'); }); });
+  }
+  document.getElementById('title').textContent = D.title || 'qPCR report';
+  document.getElementById('subtitle').textContent = D.subtitle || '';
+  document.querySelectorAll('button.chip').forEach(function (b) { if (b.dataset.f === filter) b.classList.add('on'); b.addEventListener('click', function () { filter = b.dataset.f; store('filter', filter); document.querySelectorAll('button.chip').forEach(function (x) { x.classList.toggle('on', x === b); }); render(); }); });
+  document.getElementById('q').addEventListener('input', function (e) { query = e.target.value.trim().toLowerCase(); render(); });
+  var theme = document.getElementById('theme'); theme.addEventListener('click', function () { var d = document.documentElement, t = d.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'; d.setAttribute('data-theme', t); try { localStorage.setItem('qpcr-theme', t); } catch (e) {} });
+  var scale = store('scale') || 1; function applyScale() { document.documentElement.style.setProperty('--scale', scale); store('scale', scale); }
+  document.getElementById('fs-dn').addEventListener('click', function () { scale = Math.max(0.7, scale - 0.1); applyScale(); });
+  document.getElementById('fs-up').addEventListener('click', function () { scale = Math.min(1.6, scale + 0.1); applyScale(); });
+  document.getElementById('fs-0').addEventListener('click', function () { scale = 1; applyScale(); }); applyScale();
+  document.getElementById('navtoggle').addEventListener('click', function () { document.body.classList.toggle('navopen'); });
+  render();
+})();
+</script>
+</body>
+</html>

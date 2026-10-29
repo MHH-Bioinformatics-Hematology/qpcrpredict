@@ -25,6 +25,8 @@ attributes.
 | Prediction model | A model bundle (`.pkl`) from the history: a released model downloaded from the data deposit, or a bundle created with `qpcrpredict train`. The tool ships no model. |
 | Single sample id (optional) | Score only this sample. Leave empty to score all samples of the target. |
 
+A second tool, **qpcrpredict report**, takes one or more prediction tables from the history (and optionally their run files) and writes the HTML report described in [HTML report](report.md).
+
 ## Output
 
 One tabular dataset with the columns described in [Output](output.md). The console report is available

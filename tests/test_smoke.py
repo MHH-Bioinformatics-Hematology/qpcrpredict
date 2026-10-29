@@ -206,6 +206,28 @@ def test_restricted_family_is_flagged_and_can_be_refused(tmp_path):
     assert len(predict(run, "MYTARGET", p, quiet=True)) == 1  # allowed when not refused
 
 
+def test_report_from_prediction_tables(tmp_path):
+    from qpcrpredict.train import fit
+    from qpcrpredict.predict import predict
+    from qpcrpredict.report import build
+    rows = []
+    for i in range(12):
+        pos = i % 2 == 0
+        write_rdml(synthetic_run(positive=pos, sample=f"P{i}"), str(tmp_path / f"r{i}.rdml"), {"REFERENCE"})
+        rows.append(dict(sample=f"P{i}", target="MYTARGET", label="positive" if pos else "negative", run_file=f"r{i}.rdml"))
+    pd.DataFrame(rows).to_csv(tmp_path / "labels.csv", index=False)
+    model = str(tmp_path / "m.pkl")
+    fit(str(tmp_path), str(tmp_path / "labels.csv"), model_name="logreg", out=model, cv=False, assay="generic", log=lambda *a: None)
+    tabs = []
+    for i in (0, 1):
+        t = str(tmp_path / f"calls{i}.tsv"); predict(str(tmp_path / f"r{i}.rdml"), "MYTARGET", model, quiet=True, out_path=t); tabs.append(t)
+    out = str(tmp_path / "report.html")
+    n, c = build(tabs, out, runs=[str(tmp_path / "r0.rdml"), str(tmp_path / "r1.rdml")], title="Test batch", assay="generic")
+    html = open(out, encoding="utf-8").read()
+    assert n == 2 and c == 2
+    assert "Test batch" in html and "P0" in html and "P1" in html and "__DATA__" not in html and "<script src" not in html
+
+
 def test_patient_column_groups_the_folds(tmp_path):
     from qpcrpredict.train import features_from_corpus
     rows = []

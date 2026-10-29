@@ -48,4 +48,4 @@ package-dir = { "" = "src" }
 where = ["src"]
 
 [tool.setuptools.package-data]
-qpcrpredict = ["data/assays/*.json"]
+qpcrpredict = ["data/assays/*.json", "data/*.html"]

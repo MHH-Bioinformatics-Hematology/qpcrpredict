@@ -77,7 +77,7 @@ def predict(run_path, target, model_path=None, sample=None, out_path=None, quiet
         sid = str(sid).strip()
         rec = F.sample_feature_record(parsed, sid, family, A)
         if rec is None:
-            results.append(dict(sample=sid, target=target, family=family, run_date=run_date,
+            results.append(dict(sample=sid, target=target, family=family, run_date=run_date, run_file=os.path.basename(run_path),
                                 decision="not_found", call="not found", ml_prob=np.nan,
                                 reason=f"no {family} wells for sample '{sid}' in this run"))
             continue
@@ -90,7 +90,7 @@ def predict(run_path, target, model_path=None, sample=None, out_path=None, quiet
         a = QC.assess(row, classifier_call=ml_call, T=T, classifier_prob=prob,
                       reference=A.reference_name, ratio_scale=A.ratio_scale, texts=A.texts)
         results.append(dict(
-            sample=sid, target=target, family=family, run_date=run_date,
+            sample=sid, target=target, family=family, run_date=run_date, run_file=os.path.basename(run_path),
             decision=a["decision"], call=_call_word(a["decision"], A.texts), redo=a["redo"], review=a.get("review", False),
             model_call=a.get("model_call", "positive" if ml_call == "pos" else "negative"),
             ml_prob=round(prob, 4), quality=a["quality"],
