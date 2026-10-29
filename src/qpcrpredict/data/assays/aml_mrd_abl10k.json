@@ -1,6 +1,6 @@
 {
-  "name": "aml_mrd_eln2025",
-  "description": "AML molecular MRD by RT-qPCR with a standard curve, with the interpretation thresholds of the 2025 ELN MRD update: a well counts as amplified below Ct 40 and a negative call requires at least 10,000 ABL1 copies. Targets as in aml_mrd.",
+  "name": "aml_mrd_abl10k",
+  "description": "AML molecular MRD by RT-qPCR with a standard curve, with the reference-gene rule of the 2025 ELN MRD update: a negative call requires at least 10,000 ABL1 copies. Targets and the Ct cutoff per well as in aml_mrd.",
   "n_cycles": 40,
   "baseline_cycles": [
     3,
@@ -222,9 +222,7 @@
         "negative",
         "mrd neg",
         "mrd negativ",
-        "kein nachweis",
-        "n.d.",
-        "nd"
+        "kein nachweis"
       ],
       "prefixes": [
         "neg"
@@ -236,7 +234,13 @@
         "na",
         "nicht auswertbar",
         "nicht beurteilbar",
-        "invalid"
+        "invalid",
+        "n.d.",
+        "n.d",
+        "nd",
+        "not determinable",
+        "not evaluable",
+        "nicht bestimmbar"
       ],
       "prefixes": []
     }
@@ -286,7 +290,7 @@
     "ref_sufficient": 10000,
     "ref_insufficient": 10000,
     "r2_min": 0.95,
-    "ct_pos_max": 40,
+    "ct_pos_max": 41,
     "min_pos_replicates": 2,
     "low_level_ratio": 250,
     "decision_threshold": 0.5,
@@ -294,13 +298,15 @@
     "review_prob_lo": 0.35,
     "review_prob_hi": 0.65,
     "review_flag_discordant": false,
-    "review_ct_lo": 38,
-    "review_ct_hi": 41
+    "review_ct_lo": 39,
+    "review_ct_hi": 42
   },
   "texts": {
     "low_level": "MRD at low level",
     "redo_material": "Repeat the assay with newly synthesised cDNA. If the reference copy number remains below the limit after re-synthesis, report as not evaluable.",
     "redo_run": "Repeat the run (re-check the standard curve and the reference).",
-    "review": "For human classification: borderline or low-level result. The raw amplification is ambiguous and the call depends on expert judgement."
+    "review": "For human classification: borderline or low-level result. The raw amplification is ambiguous and the call depends on expert judgement.",
+    "call_na": "n.d.",
+    "call_review": "review"
   }
 }

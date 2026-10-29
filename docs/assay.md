@@ -10,7 +10,7 @@ model with that configuration.
 | Name | Content |
 |---|---|
 | `aml_mrd` | Default. AML molecular MRD: mutated *NPM1*, *RUNX1::RUNX1T1*, *CBFB::MYH11*, *PML::RARA*, *BCR::ABL1*, reference *ABL1*. This is the configuration of the packaged model. |
-| `aml_mrd_eln2025` | The same assay with the thresholds of the 2025 ELN MRD update: a well counts as amplified below Ct 40 and a negative call requires at least 10,000 *ABL1* copies. This is the configuration of the packaged `aml_mrd_eln2025` model. |
+| `aml_mrd_abl10k` | The same assay with the reference-gene rule of the ELN MRD recommendations: a negative call requires at least 10,000 *ABL1* copies. This is the configuration of the packaged `aml_mrd_abl10k` model. |
 | `generic` | Template for any standard-curve qPCR assay with one reference gene. Every detector that is not the reference is its own target. |
 
 ```bash
@@ -125,7 +125,7 @@ in the assay configuration.
 | `ct_cap` | Value used for undetermined Ct in the features. |
 | `ratio_scale` | The reported ratio is target quantity per this many reference copies. |
 | `qc` | Thresholds of the quality and review gate, see [Decision logic](decision.md). |
-| `texts` | Wording of the low-level annotation and of the recommendations. |
+| `texts` | Wording of the low-level annotation, of the recommendations, and of the reported call for a run that cannot be evaluated (`call_na`, default `n.d.`) and for a deferred one (`call_review`). |
 
 All patterns are regular expressions applied to the lower-cased name.
 

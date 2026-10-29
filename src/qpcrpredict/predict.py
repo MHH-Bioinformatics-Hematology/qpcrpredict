@@ -78,7 +78,7 @@ def predict(run_path, target, model_path=None, sample=None, out_path=None, quiet
         rec = F.sample_feature_record(parsed, sid, family, A)
         if rec is None:
             results.append(dict(sample=sid, target=target, family=family, run_date=run_date,
-                                decision="not_found", ml_prob=np.nan,
+                                decision="not_found", call="not found", ml_prob=np.nan,
                                 reason=f"no {family} wells for sample '{sid}' in this run"))
             continue
         row, curves = rec
@@ -91,7 +91,7 @@ def predict(run_path, target, model_path=None, sample=None, out_path=None, quiet
                       reference=A.reference_name, ratio_scale=A.ratio_scale, texts=A.texts)
         results.append(dict(
             sample=sid, target=target, family=family, run_date=run_date,
-            decision=a["decision"], redo=a["redo"], review=a.get("review", False),
+            decision=a["decision"], call=_call_word(a["decision"], A.texts), redo=a["redo"], review=a.get("review", False),
             model_call=a.get("model_call", "positive" if ml_call == "pos" else "negative"),
             ml_prob=round(prob, 4), quality=a["quality"],
             ref_qty_mean=_r(row.get("ref_qty_mean")),
@@ -113,14 +113,20 @@ def predict(run_path, target, model_path=None, sample=None, out_path=None, quiet
     return res
 
 
+def _call_word(decision, texts):
+    """The wording of a decision as it is reported: positive, negative, the laboratory's term for a
+    run that cannot be evaluated (``texts.call_na``, default ``n.d.``) and ``texts.call_review``."""
+    texts = texts or {}
+    return {"positive": "positive", "negative": "negative", "na": texts.get("call_na", "n.d."),
+            "review": texts.get("call_review", "review")}.get(decision, decision)
+
+
 def _report(res, run_path, run_date, bundle, family, assay):
     print(f"\nrun    : {os.path.basename(run_path)}   run_date={run_date}")
     print(f"target : {family}   assay={assay.name}   model={bundle.get('model_name')} (rep={bundle.get('rep')})")
     print("=" * 92)
-    tagmap = {"positive": "POSITIVE", "negative": "NEGATIVE", "na": "N.A. -> REDO",
-              "review": "REVIEW (human)", "not_found": "NOT FOUND"}
     for _, r in res.iterrows():
-        tag = tagmap.get(r["decision"], r["decision"].upper())
+        tag = {"na": f"{_call_word('na', assay.texts).upper()} -> REDO", "review": "REVIEW (human)", "not_found": "NOT FOUND"}.get(r["decision"], str(r.get("call", r["decision"])).upper())
         prob = f"p(pos)={r['ml_prob']:.3f}" if pd.notna(r.get("ml_prob")) else ""
 
         def _txt(k):
@@ -134,7 +140,7 @@ def _report(res, run_path, run_date, bundle, family, assay):
             if _txt(key):
                 print(f"       {label:7s}: {_txt(key)}")
     print("=" * 92)
-    print("summary:", res["decision"].value_counts().to_dict())
+    print("summary:", res["call"].value_counts().to_dict() if "call" in res else res["decision"].value_counts().to_dict())
     note = license_note(bundle.get("model_name"))
     if note:
         print("license:", note)

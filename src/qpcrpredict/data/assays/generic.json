@@ -83,7 +83,14 @@
       "exact": [
         "na",
         "n.a.",
-        "invalid"
+        "invalid",
+        "n.d.",
+        "n.d",
+        "nd",
+        "not determinable",
+        "not evaluable",
+        "nicht bestimmbar",
+        "nicht auswertbar"
       ],
       "prefixes": []
     }
@@ -145,6 +152,8 @@
     "low_level": "low-level positive",
     "redo_material": "Repeat the measurement with new template.",
     "redo_run": "Repeat the run (re-check the standard curve and the reference).",
-    "review": "For human classification: borderline result."
+    "review": "For human classification: borderline result.",
+    "call_na": "n.d.",
+    "call_review": "review"
   }
 }

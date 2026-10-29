@@ -11,7 +11,8 @@
 | `target` | Target as given on the command line. |
 | `family` | Target family of the assay configuration, for example `NPM1` or `AML1_ETO`. |
 | `run_date` | Run date from the run file. |
-| `decision` | Final decision: `positive`, `negative`, `review` or `na`. `not_found` if a sample requested with `--sample` has no wells of the target. |
+| `decision` | Final decision code: `positive`, `negative`, `review` or `na`. `not_found` if a sample requested with `--sample` has no wells of the target. |
+| `call` | The decision in the words of the report: `positive`, `negative`, `review`, and for `na` the laboratory's term for a run that cannot be evaluated, `n.d.` by default (`texts.call_na` in the assay configuration). |
 | `redo` | `True` if the sample is not assessable and the measurement should be repeated. |
 | `review` | `True` if the sample is deferred to human classification. |
 | `model_call` | Call of the classifier alone, before the gate: `positive` or `negative`. |

@@ -43,9 +43,9 @@ Two models are shipped. `--model` accepts a path to a bundle or the name of a pa
 | `--model` | Labels it was trained on | Thresholds of its gate |
 |---|---|---|
 | `aml_mrd` (default) | the calls of the laboratory as reported, 2019 to 2025 | laboratory SOP: a well counts as amplified below Ct 41; a negative call needs at least 1,000 *ABL1* copies, 1,000 to 9,999 is annotated as limited |
-| `aml_mrd_eln2025` | the same calls, overridden where the 2025 ELN MRD update gives a definite different answer: at least 2 of 3 wells below Ct 40 is positive, fewer with at least 10,000 *ABL1* copies is negative, fewer with fewer copies is not evaluable and was excluded | ELN 2025: Ct 40 per well, 10,000 *ABL1* copies for a negative call |
+| `aml_mrd_abl10k` | the same calls, with the reference-gene rule of the ELN MRD recommendations applied: a negative call with fewer than 10,000 *ABL1* copies is not evaluable and was excluded; no call was changed | laboratory SOP with 10,000 *ABL1* copies required for a negative call; Ct 41 per well as before |
 
-The `aml_mrd_eln2025` model was trained on 1,271 analyses (944 positive, 327 negative) of 510 patients; 216 analyses of the modeling set were not evaluable under the 2025 thresholds and 38 calls were overridden. Choose it where the laboratory reports under the 2025 update.
+Choose `aml_mrd_abl10k` where the laboratory requires 10,000 reference copies for a negative result, as the ELN recommendations do since 2021. Its training set and performance are given in [Performance](performance.md).
 
 ### aml_mrd
 

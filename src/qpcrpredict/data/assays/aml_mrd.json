@@ -28,7 +28,7 @@
   "noise_patterns": [
     "^standard$",
     "^std",
-    "°c",
+    "\u00b0c",
     "^[\\d.,]+$"
   ],
   "targets": [
@@ -222,9 +222,7 @@
         "negative",
         "mrd neg",
         "mrd negativ",
-        "kein nachweis",
-        "n.d.",
-        "nd"
+        "kein nachweis"
       ],
       "prefixes": [
         "neg"
@@ -236,7 +234,13 @@
         "na",
         "nicht auswertbar",
         "nicht beurteilbar",
-        "invalid"
+        "invalid",
+        "n.d.",
+        "n.d",
+        "nd",
+        "not determinable",
+        "not evaluable",
+        "nicht bestimmbar"
       ],
       "prefixes": []
     }
@@ -301,6 +305,8 @@
     "low_level": "MRD at low level",
     "redo_material": "Repeat the assay with newly synthesised cDNA. If the reference copy number remains below the limit after re-synthesis, report as not evaluable.",
     "redo_run": "Repeat the run (re-check the standard curve and the reference).",
-    "review": "For human classification: borderline or low-level result. The raw amplification is ambiguous and the call depends on expert judgement."
+    "review": "For human classification: borderline or low-level result. The raw amplification is ambiguous and the call depends on expert judgement.",
+    "call_na": "n.d.",
+    "call_review": "review"
   }
 }

@@ -6,7 +6,7 @@ ambiguous samples to a human. The gate is rule-based, fully transparent and conf
 
 ## Step 1: is the sample assessable?
 
-A sample is not assessable (`decision = na`, `redo = True`) if one of the following holds.
+A sample is not assessable (`decision = na`, `redo = True`) if one of the following holds. In the report this call is written as `n.d.` (not determinable), the term the laboratory uses on its result sheets; the wording is `texts.call_na` in the assay configuration. A label `n.d.` in a training table is read the same way, as not evaluable, and such rows are left out of the positive/negative training.
 
 | Check | Default threshold | Recommendation |
 |---|---|---|
