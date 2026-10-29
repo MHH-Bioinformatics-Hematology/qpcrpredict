@@ -6,7 +6,7 @@ developed for leukemia diagnostics at Hannover Medical School.*
 `qpcrpredict` predicts the positive or negative call of a real-time PCR assay directly from the
 raw run file of the instrument (Applied Biosystems `.eds`, or the vendor-neutral RDML format). It
 was developed for the qualitative molecular measurable residual disease (MRD) result in acute
-myeloid leukemia, and the packaged model covers that application. Targets, reference gene, control
+myeloid leukemia, and the released models cover that application. Targets, reference gene, control
 names, cycle number and thresholds are defined in an assay configuration, so a model can be
 trained for other standard-curve qPCR assays.
 
@@ -24,8 +24,8 @@ Linux and macOS. All dependencies, including the optional model families, come w
 ## Use
 
 ```bash
-# score every sample of one target in a run (.eds or .rdml); the packaged model is the default
-qpcrpredict predict --run run.eds --target NPM1 --out calls.tsv
+# score every sample of one target in a run (.eds or .rdml) with a released or own model bundle
+qpcrpredict predict --run run.eds --target NPM1 --model aml_mrd.pkl --out calls.tsv
 
 # train a model from run files and a labels table (sample, target, label[, run_file])
 qpcrpredict train --runs-dir runs/ --labels labels.csv --out model.pkl
@@ -49,8 +49,8 @@ If you use `qpcrpredict`, please cite the publication given in the documentation
 
 ## Intended use
 
-`qpcrpredict` is research software and not a certified in vitro diagnostic device. The packaged
-model was trained on the data of one laboratory, one instrument type and one set of assays.
+`qpcrpredict` is research software and not a certified in vitro diagnostic device. The released
+models were trained on the data of one laboratory, one instrument type and one set of assays.
 Validate it on your own data, or train your own model, before relying on its output.
 
 ## License

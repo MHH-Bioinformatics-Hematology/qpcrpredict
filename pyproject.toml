@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "qpcrpredict"
 version = "1"
-description = "Trained positive/negative calls from raw real-time PCR run files (.eds, .rdml), with a packaged model for AML molecular MRD. Part of the LeukoPredict tools."
+description = "Trained positive/negative calls from raw real-time PCR run files (.eds, .rdml), with released models for AML molecular MRD published separately. Part of the LeukoPredict tools."
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }
@@ -48,4 +48,4 @@ package-dir = { "" = "src" }
 where = ["src"]
 
 [tool.setuptools.package-data]
-qpcrpredict = ["data/*.pkl", "data/*.json", "data/assays/*.json"]
+qpcrpredict = ["data/assays/*.json"]

@@ -80,12 +80,12 @@ See [Decision logic](decision.md) for the rules and an example.
 
 ## Model bundles
 
-`load_bundle(path=None)` loads a bundle, or the packaged model if no path is given. `save_bundle(bundle, path)` writes a bundle and its `.json` provenance file.
+`load_bundle(path)` loads a bundle; the package ships no model, so a path is required. `save_bundle(bundle, path)` writes a bundle and its `.json` provenance file.
 
 ```python
 from qpcrpredict.bundle import load_bundle
 
-bundle = load_bundle()                 # packaged model
+bundle = load_bundle("aml_mrd.pkl")    # released model, downloaded from the data deposit
 bundle = load_bundle("my_model.pkl")   # own model
 print(bundle["model_name"], bundle["n_train"], bundle["cv_metrics"])
 

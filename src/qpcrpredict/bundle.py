@@ -3,7 +3,7 @@
 A bundle is a joblib dictionary with the keys pipeline, rep, model_name, classes, feature_dim,
 n_train, assay (the complete assay configuration the model was trained with), cv_metrics and
 created. Bundles written by earlier versions carry ``qc_thresholds`` and no assay; they are read
-with the packaged default assay and their stored thresholds.
+with the default assay and their stored thresholds. The package itself contains no model.
 """
 import os
 import joblib
@@ -11,37 +11,16 @@ import joblib
 from .assay import load_assay
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
-_DEFAULT = os.path.join(_HERE, "data", "aml_mrd_model.pkl")
+MODELS_URL = "https://qpcrpredict.readthedocs.io/en/latest/models/"
 
 
-def default_model_path():
-    """Path to the model shipped inside the package, or None if not bundled."""
-    return _DEFAULT if os.path.exists(_DEFAULT) else None
-
-
-def packaged_models():
-    """Names of the models shipped inside the package (``aml_mrd``, ``aml_mrd_abl10k``)."""
-    d = os.path.join(_HERE, "data")
-    return sorted(f[:-len("_model.pkl")] for f in os.listdir(d) if f.endswith("_model.pkl"))
-
-
-def packaged_model_path(name):
-    """Path of a packaged model given its name, or None."""
-    p = os.path.join(_HERE, "data", f"{name}_model.pkl")
-    return p if os.path.exists(p) else None
-
-
-def load_bundle(path=None):
-    """Load a bundle. If path is None, fall back to the packaged default model."""
-    if path is None:
-        path = default_model_path()
-        if path is None:
-            raise SystemExit("no model given and no packaged default model found; pass --model")
+def load_bundle(path):
+    """Load a model bundle written by ``qpcrpredict train``. The package ships no model; the
+    released models are published with the data deposit, see the Models page of the documentation."""
+    if not path:
+        raise SystemExit("no model given; pass --model with a bundle (.pkl) from qpcrpredict train or from the released models, see " + MODELS_URL)
     if not os.path.exists(path):
-        packaged = packaged_model_path(path)
-        if packaged is None:
-            raise SystemExit(f"model bundle not found: {path} (packaged models: {', '.join(packaged_models())})")
-        path = packaged
+        raise SystemExit(f"model bundle not found: {path}")
     b = joblib.load(path)
     if not isinstance(b, dict) or "pipeline" not in b:
         raise SystemExit(f"{path} is not a model bundle")

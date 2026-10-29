@@ -32,33 +32,33 @@ pretrained model, so the license applies to the bundle as well.
 `qpcrpredict` prints this license note when a TabPFN bundle is trained, inspected or used, and
 stores it in the bundle. `qpcrpredict predict --disallow-family tabpfn` refuses such bundles. The
 Galaxy tool sets this option unless the server operator has enabled TabPFN models, see
-[Galaxy](galaxy.md#tabpfn-models). All other model families, including the packaged `hist_gb`
-model, carry no such restriction. In the laboratory of the authors no TabPFN model is deployed for
+[Galaxy](galaxy.md#tabpfn-models). All other model families, including the released `hist_gb`
+models, carry no such restriction. In the laboratory of the authors no TabPFN model is deployed for
 this reason. Built with PriorLabs-TabPFN.
 
-## The packaged models
+## Released models
 
-Two models are shipped. `--model` accepts a path to a bundle or the name of a packaged model.
+The package contains the code and the assay configurations and no model. The trained models are released separately, as model bundles (`.pkl`) in the data deposit of the publication (Zenodo, see [Public data](data.md)), so that code and models have separate versions and licenses. `--model` takes the path of a downloaded bundle.
 
-| `--model` | Labels it was trained on | Thresholds of its gate |
+| Bundle | Labels it was trained on | Thresholds of its gate |
 |---|---|---|
-| `aml_mrd` (default) | the calls of the laboratory as reported, 2019 to 2025 | laboratory SOP: a well counts as amplified below Ct 41; a negative call needs at least 1,000 *ABL1* copies, 1,000 to 9,999 is annotated as limited |
-| `aml_mrd_abl10k` | the same calls, with the reference-gene rule of the ELN MRD recommendations applied: a negative call with fewer than 10,000 *ABL1* copies is not evaluable and was excluded; no call was changed | laboratory SOP with 10,000 *ABL1* copies required for a negative call; Ct 41 per well as before |
+| `aml_mrd.pkl` | the calls of the laboratory as reported, 2019 to 2025 | laboratory SOP: a well counts as amplified below Ct 41; a negative call needs at least 1,000 *ABL1* copies, 1,000 to 9,999 is annotated as limited |
+| `aml_mrd_abl10k.pkl` | the same calls, with the reference-gene rule of the ELN MRD recommendations applied: a negative call with fewer than 10,000 *ABL1* copies is not evaluable and was excluded; no call was changed | laboratory SOP with 10,000 *ABL1* copies required for a negative call; Ct 41 per well as before |
 
-Choose `aml_mrd_abl10k` where the laboratory requires 10,000 reference copies for a negative result, as the ELN recommendations do since 2021. Its training set and performance are given in [Performance](performance.md).
+Choose `aml_mrd_abl10k.pkl` where the laboratory requires 10,000 reference copies for a negative result, as the ELN recommendations do since 2021. Both are `hist_gb` bundles and carry no license restriction. The deposit also holds the bundles of the other model families, trained on all analyses and on the development period of the temporal test.
 
-### aml_mrd
+### aml_mrd.pkl
 
 | Property | Value |
 |---|---|
 | Family | `hist_gb` |
 | Representation | `all` (26 features) |
-| Training analyses | 1,487 (1,044 positive, 443 negative) from 534 patients who agreed to the publication of their data |
+| Training analyses | 1,444 (1,044 positive, 400 negative) from 530 patients who agreed to the publication of their data |
 | Targets | *NPM1*, *RUNX1::RUNX1T1*, *CBFB::MYH11*, *PML::RARA*, *BCR::ABL1* |
 | Period | 2019 to 2025, single center |
 
-`hist_gb` was chosen as the default because it needs only scikit-learn, trains in seconds, handles
-missing values natively and was the best family on the held-out temporal test of the publication.
+`hist_gb` was chosen because it needs only scikit-learn, trains in seconds, handles
+missing values natively and was within 0.005 F2 of the best family on the development period of the publication.
 The differences between the top families are small, see [Performance](performance.md).
 
 ## Choosing a family for your own data

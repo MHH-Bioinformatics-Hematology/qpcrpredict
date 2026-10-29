@@ -5,7 +5,7 @@ features, model and decision logic are identical for them.
 
 | Format | Extension | Source |
 |---|---|---|
-| Applied Biosystems project file | `.eds` | 7500 Software; primary format, used for the packaged model |
+| Applied Biosystems project file | `.eds` | 7500 Software; primary format, used for the released models |
 | RDML | `.rdml`, `.rdm` | vendor-neutral open standard ([rdml.org](https://rdml.org)), exported by most qPCR software |
 
 The format is detected from the file content, so the extension does not matter.

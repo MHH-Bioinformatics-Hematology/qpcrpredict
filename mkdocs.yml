@@ -1,5 +1,5 @@
 site_name: "LeukoPredict: qpcrpredict"
-site_description: Trained positive/negative calls from raw real-time PCR run files, with a packaged model for AML molecular MRD
+site_description: Trained positive/negative calls from raw real-time PCR run files, for AML molecular MRD and other standard-curve qPCR assays
 site_author: Joachim Wolff
 site_url: https://qpcrpredict.readthedocs.io/
 repo_url: https://github.com/MHH-Bioinformatics-Hematology/qpcrpredict

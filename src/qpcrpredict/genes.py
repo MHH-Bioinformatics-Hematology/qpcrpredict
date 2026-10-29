@@ -1,6 +1,6 @@
 """Name resolution for the default assay (kept for backwards compatibility).
 
-All logic lives in :class:`qpcrpredict.assay.Assay`. These functions apply the packaged default assay;
+All logic lives in :class:`qpcrpredict.assay.Assay`. These functions apply the default assay;
 code that works with another assay should call the methods of its own ``Assay`` object.
 """
 from .assay import load_assay

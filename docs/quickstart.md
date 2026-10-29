@@ -6,7 +6,7 @@ One `.eds` file is one 96-well plate and usually contains several patient sample
 call scores all patient samples of one target on that plate.
 
 ```bash
-qpcrpredict predict --run run_0100.eds --target RUNX1::RUNX1T1 --out calls.tsv
+qpcrpredict predict --run run_0100.eds --target RUNX1::RUNX1T1 --model aml_mrd.pkl --out calls.tsv
 ```
 
 Console report:

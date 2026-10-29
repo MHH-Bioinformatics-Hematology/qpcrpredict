@@ -165,7 +165,7 @@ def main(argv=None):
                     help="folder containing the run files (.eds or .rdml)")
     ap.add_argument("--labels", required=True, help="labels table: sample, target, label[, run_file, patient]")
     ap.add_argument("--assay", default=None,
-                    help="assay configuration: packaged name or JSON file (default: the packaged default assay)")
+                    help="assay configuration: built-in name or JSON file (default: aml_mrd)")
     ap.add_argument("--model", default="hist_gb",
                     help="model family: " + ", ".join(M.ALL_MODELS) + " (default hist_gb)")
     ap.add_argument("--rep", default="all", choices=F.ALL_REPS + ["curve_ta_ablrel"],

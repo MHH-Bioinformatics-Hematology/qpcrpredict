@@ -3,7 +3,7 @@
 Contract
   input 1 : one run file (.eds or .rdml)
   input 2 : a target (selects which assay on the plate to score)
-  input 3 : a trained model bundle (.pkl)  [optional: falls back to the packaged default]
+  input 3 : a trained model bundle (.pkl), from qpcrpredict train or from the released models
 
 For every sample that carries the target in the run (or a single --sample) the result is
 positive / negative / review / na, with the reason and a recommendation. The assay configuration
@@ -154,10 +154,10 @@ def main(argv=None):
     ap.add_argument("--target", "--gene", dest="target", required=True,
                     help="target to score: a target name or alias of the assay, or a detector name "
                          "as written on the plate (see 'qpcrpredict assay')")
-    ap.add_argument("--model", default=None,
-                    help="trained model bundle (.pkl); default = packaged model")
+    ap.add_argument("--model", required=True,
+                    help="trained model bundle (.pkl) from qpcrpredict train or from the released models (required)")
     ap.add_argument("--assay", default=None,
-                    help="assay configuration (packaged name or JSON file) that overrides the one "
+                    help="assay configuration (built-in name or JSON file) that overrides the one "
                          "stored in the model bundle")
     ap.add_argument("--disallow-family", action="append", default=[], metavar="PREFIX",
                     help="refuse model bundles of this family, for example 'tabpfn' where the "

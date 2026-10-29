@@ -59,6 +59,6 @@ kept for experiments.
 
 ## Feature contributions
 
-In the packaged model the mean target Ct is the most influential feature. By SHAP value, the
+In the released model the mean target Ct is the most influential feature. By SHAP value, the
 summary features account for about 65% of the total contribution, the target-curve descriptors for
 about 26% and the *ABL1*-curve descriptors for about 9%.

@@ -9,12 +9,12 @@ model with that configuration.
 
 | Name | Content |
 |---|---|
-| `aml_mrd` | Default. AML molecular MRD: mutated *NPM1*, *RUNX1::RUNX1T1*, *CBFB::MYH11*, *PML::RARA*, *BCR::ABL1*, reference *ABL1*. This is the configuration of the packaged model. |
-| `aml_mrd_abl10k` | The same assay with the reference-gene rule of the ELN MRD recommendations: a negative call requires at least 10,000 *ABL1* copies. This is the configuration of the packaged `aml_mrd_abl10k` model. |
+| `aml_mrd` | Default. AML molecular MRD: mutated *NPM1*, *RUNX1::RUNX1T1*, *CBFB::MYH11*, *PML::RARA*, *BCR::ABL1*, reference *ABL1*. This is the configuration of the released model `aml_mrd.pkl`. |
+| `aml_mrd_abl10k` | The same assay with the reference-gene rule of the ELN MRD recommendations: a negative call requires at least 10,000 *ABL1* copies. This is the configuration of the released model `aml_mrd_abl10k.pkl`. |
 | `generic` | Template for any standard-curve qPCR assay with one reference gene. Every detector that is not the reference is its own target. |
 
 ```bash
-qpcrpredict assay                          # list the packaged configurations
+qpcrpredict assay                          # list the built-in configurations
 qpcrpredict assay --show generic > my_assay.json
 ```
 

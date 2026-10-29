@@ -20,9 +20,9 @@ attributes.
 | Parameter | Description |
 |---|---|
 | qPCR run file | An `.eds` or RDML file from the history. The format is detected from the content. |
-| Assay | The packaged AML MRD assay, or an assay configuration (JSON) from the history. |
-| Target | With the packaged assay one of `NPM1`, `RUNX1::RUNX1T1`, `CBFB::MYH11`, `PML::RARA`, `BCR::ABL1`; with your own assay a target name or the detector name on the plate. |
-| Prediction model | **Packaged default model**, or **Trained model from history** to select a model bundle (`.pkl`) that was created with `qpcrpredict train` and uploaded to the history. |
+| Assay | The built-in AML MRD assay, or an assay configuration (JSON) from the history. |
+| Target | With the built-in assay one of `NPM1`, `RUNX1::RUNX1T1`, `CBFB::MYH11`, `PML::RARA`, `BCR::ABL1`; with your own assay a target name or the detector name on the plate. |
+| Prediction model | A model bundle (`.pkl`) from the history: a released model downloaded from the data deposit, or a bundle created with `qpcrpredict train`. The tool ships no model. |
 | Single sample id (optional) | Score only this sample. Leave empty to score all samples of the target. |
 
 ## Output

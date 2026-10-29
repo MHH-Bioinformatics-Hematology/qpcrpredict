@@ -155,18 +155,16 @@ def test_train_and_predict_on_rdml_with_custom_assay(tmp_path):
     assert res["decision"].iloc[0] == "negative"
 
 
-def test_packaged_model_predicts():
-    from qpcrpredict.bundle import default_model_path, load_bundle, bundle_assay
-    if default_model_path() is None:
-        pytest.skip("no packaged model")
-    b = load_bundle()
-    a = bundle_assay(b)
-    assert a.name == "aml_mrd"
-    run = complete_run(synthetic_run(reference="ABL", target="NPM1 mut A"), a)
-    row, curves = F.sample_feature_record(run, "S1", "NPM1", a)
-    X, _ = F.build_features(pd.DataFrame([row]), pd.DataFrame([curves]), b["rep"], a.ct_cap)
-    p = b["pipeline"].predict_proba(X)[0, 1]
-    assert 0.0 <= p <= 1.0
+def test_package_ships_no_model():
+    import glob, os
+    import qpcrpredict
+    data = os.path.join(os.path.dirname(qpcrpredict.__file__), "data")
+    assert glob.glob(os.path.join(data, "*.pkl")) == []
+    from qpcrpredict.bundle import load_bundle
+    with pytest.raises(SystemExit):
+        load_bundle(None)
+    with pytest.raises(SystemExit):
+        load_bundle("does_not_exist.pkl")
 
 
 def test_nd_is_not_evaluable():
@@ -176,18 +174,9 @@ def test_nd_is_not_evaluable():
     assert a.texts.get("call_na") == "n.d."
 
 
-def test_packaged_abl10k_model_loads_by_name():
-    from qpcrpredict.bundle import packaged_models, load_bundle, bundle_assay
-    if "aml_mrd_abl10k" not in packaged_models():
-        pytest.skip("no packaged ABL1 10,000 model")
-    b = load_bundle("aml_mrd_abl10k")
-    a = bundle_assay(b)
-    assert a.name == "aml_mrd_abl10k"
+def test_abl10k_assay_thresholds():
+    a = load_assay("aml_mrd_abl10k")
     assert float(a.qc["ct_pos_max"]) == 41.0 and float(a.qc["ref_insufficient"]) == 10000.0
-    run = complete_run(synthetic_run(reference="ABL", target="NPM1 mut A"), a)
-    row, curves = F.sample_feature_record(run, "S1", "NPM1", a)
-    X, _ = F.build_features(pd.DataFrame([row]), pd.DataFrame([curves]), b["rep"], a.ct_cap)
-    assert 0.0 <= b["pipeline"].predict_proba(X)[0, 1] <= 1.0
 
 
 def test_restricted_family_is_flagged_and_can_be_refused(tmp_path):
@@ -197,16 +186,24 @@ def test_restricted_family_is_flagged_and_can_be_refused(tmp_path):
     assert license_note("hist_gb") is None
     assert "non-commercial" in license_note("tabpfn_v26")
     from qpcrpredict.bundle import load_bundle
-    b = dict(load_bundle())
+    from qpcrpredict.train import fit
+    rows = []
+    for i in range(12):
+        pos = i % 2 == 0
+        write_rdml(synthetic_run(positive=pos, sample=f"P{i}"), str(tmp_path / f"r{i}.rdml"), {"REFERENCE"})
+        rows.append(dict(sample=f"P{i}", target="MYTARGET", label="positive" if pos else "negative", run_file=f"r{i}.rdml"))
+    pd.DataFrame(rows).to_csv(tmp_path / "labels.csv", index=False)
+    model = str(tmp_path / "m.pkl")
+    fit(str(tmp_path), str(tmp_path / "labels.csv"), model_name="logreg", out=model, cv=False, assay="generic", log=lambda *a: None)
+    b = dict(load_bundle(model))
     b["model_name"] = "tabpfn_v26"                       # pretend: only the family name is checked
     p = str(tmp_path / "t.pkl")
     joblib.dump(b, p)
-    run = str(tmp_path / "r.rdml")
-    write_rdml(synthetic_run(reference="ABL", target="NPM1 mut A"), run, {"ABL"})
+    run = str(tmp_path / "r0.rdml")
     with pytest.raises(SystemExit) as e:
-        predict(run, "NPM1", p, quiet=True, disallow_families=["tabpfn"])
+        predict(run, "MYTARGET", p, quiet=True, disallow_families=["tabpfn"])
     assert "Prior Labs" in str(e.value)
-    assert len(predict(run, "NPM1", p, quiet=True)) == 1  # allowed when not refused
+    assert len(predict(run, "MYTARGET", p, quiet=True)) == 1  # allowed when not refused
 
 
 def test_patient_column_groups_the_folds(tmp_path):

@@ -2,7 +2,7 @@
 
 Targets, reference genes, control names, label vocabulary, cycle number and thresholds are read
 from an assay configuration (JSON). Two
-configurations ship with the package: ``aml_mrd`` (the default, matching the packaged model) and
+configurations ship with the package: ``aml_mrd`` (the default, matching the released models) and
 ``generic`` (a template for any standard-curve qPCR assay).
 """
 import copy

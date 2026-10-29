@@ -37,8 +37,8 @@ name is not interpreted as a control, for example because it starts with `pos` o
 ## Can I use run files of another instrument?
 
 Yes, through RDML. Most qPCR software can export RDML, and `qpcrpredict` reads it like an `.eds` file,
-see [Input data](input.md). The packaged model was trained on one instrument type, so for another
-instrument train your own model, or at least verify the packaged one on your own labeled runs.
+see [Input data](input.md). The released models were trained on one instrument type, so for another
+instrument train your own model, or at least verify a released one on your own labeled runs.
 The native `.eds` reader covers the format written by the 7500 Software (versions 2.x).
 
 ## Can I use other targets, another reference gene or a different cycle number?

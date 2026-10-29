@@ -8,7 +8,7 @@ qpcrpredict train --runs-dir DIR --labels LABELS [--assay ASSAY] [--model MODEL]
 `qpcrpredict-train` is an equivalent stand-alone entry point.
 
 Train your own model if your assays, instrument settings or reporting rules differ from those of
-the packaged model, or to update a model with new data.
+the released models, or to update a model with new data.
 
 ## Parameters
 
@@ -16,7 +16,7 @@ the packaged model, or to update a model with new data.
 |---|---|---|---|
 | `--runs-dir` | yes | | Folder with the run files (`.eds` or `.rdml`). Subfolders are searched. `--eds-dir` is accepted as an alias. |
 | `--labels` | yes | | Labels table, see below. CSV, TSV, `.xls` or `.xlsx`. |
-| `--assay` | no | `aml_mrd` | Assay configuration: packaged name or JSON file, see [Assay configuration](assay.md). It is stored in the model bundle. |
+| `--assay` | no | `aml_mrd` | Assay configuration: built-in name or JSON file, see [Assay configuration](assay.md). It is stored in the model bundle. |
 | `--model` | no | `hist_gb` | Model family, see [Models](models.md). |
 | `--rep` | no | `all` | Feature representation, see [Features](features.md). |
 | `--out` | no | `model.pkl` | Path of the model bundle to write. A `.json` file with the provenance is written next to it. |

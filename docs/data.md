@@ -26,7 +26,7 @@ The anonymized data of the publication are deposited at Zenodo.
 | `repeat_run` | true if the measurement is a repeat of an earlier run |
 | `patient` | random patient number shared by all analyses of one patient |
 
-## Reproduce the packaged model
+## Reproduce the released model
 
 ```bash
 qpcrpredict train --runs-dir eds/ --labels samples.csv --model hist_gb --out reproduced.pkl

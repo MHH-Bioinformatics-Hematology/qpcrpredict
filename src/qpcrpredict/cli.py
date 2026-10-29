@@ -9,18 +9,17 @@ from . import models as M
 
 def _info(argv=None):
     ap = argparse.ArgumentParser(prog="qpcrpredict info", description="Show package and model information.")
-    ap.add_argument("--model", default=None, help="describe this model bundle (default: packaged model)")
+    ap.add_argument("--model", default=None, help="describe this model bundle (.pkl)")
     a = ap.parse_args(argv)
     from .assay import packaged_assays
-    from .bundle import default_model_path, load_bundle, bundle_assay
+    from .bundle import load_bundle, bundle_assay, MODELS_URL
     from .io import RUN_EXTENSIONS
     print(f"qpcrpredict {__version__}")
     print("run formats   :", ", ".join(RUN_EXTENSIONS))
     print("assays        :", ", ".join(packaged_assays()))
     print("models        :", ", ".join(M.ALL_MODELS))
-    dm = default_model_path()
-    print("packaged model:", dm or "(none bundled)")
-    path = a.model or dm
+    print("released models: not part of the package; see", MODELS_URL)
+    path = a.model
     if path:
         b = load_bundle(path)
         A = bundle_assay(b)
@@ -43,7 +42,7 @@ def _info(argv=None):
 def _assay(argv=None):
     ap = argparse.ArgumentParser(
         prog="qpcrpredict assay",
-        description="List the packaged assay configurations, print one as JSON (as a starting point "
+        description="List the built-in assay configurations, print one as JSON (as a starting point "
                     "for your own), or check a configuration against a run file.")
     ap.add_argument("--show", metavar="ASSAY", default=None, help="print this assay configuration as JSON")
     ap.add_argument("--check", metavar="RUN", default=None,
