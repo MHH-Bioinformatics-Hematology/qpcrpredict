@@ -20,7 +20,7 @@ def default_model_path():
 
 
 def packaged_models():
-    """Names of the models shipped inside the package (``aml_mrd``, ``aml_mrd_eln2025``)."""
+    """Names of the models shipped inside the package (``aml_mrd``, ``aml_mrd_abl10k``)."""
     d = os.path.join(_HERE, "data")
     return sorted(f[:-len("_model.pkl")] for f in os.listdir(d) if f.endswith("_model.pkl"))
 
