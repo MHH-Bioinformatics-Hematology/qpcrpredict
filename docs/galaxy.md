@@ -7,7 +7,11 @@ the output table, and the call can be repeated or built into a workflow.
 ## Installation
 
 Install the tool `qpcrpredict` (owner `mhh-hematology`) from the Galaxy ToolShed through the administrator
-interface. All dependencies are resolved from the Bioconda package or the corresponding BioContainer.
+interface. The Python dependencies (numpy, pandas, scikit-learn, scipy, joblib, pyarrow) are resolved
+by Galaxy from conda. The package itself is installed by the job from a pinned commit of the GitHub
+repository into the job working directory, so the job host needs access to github.com and the shared
+conda environment is never modified. The pinned commit is the `@QPCRPREDICT_REF@` token in the
+wrapper's `macros.xml`.
 
 ## Upload
 
