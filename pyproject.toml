@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "qpcrpredict"
-version = "1"
+version = "1.1"
 description = "Trained positive/negative calls from raw real-time PCR run files (.eds, .rdml), with released models for AML molecular MRD published separately. Part of the LeukoPredict tools."
 readme = "README.md"
 requires-python = ">=3.9"

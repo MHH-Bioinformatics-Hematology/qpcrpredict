@@ -7,7 +7,7 @@ classifier gives the probability of a positive call; a quality and review gate t
 cannot be evaluated into an explicit 'na' (repeat) and ambiguous calls into 'review'. Targets,
 reference gene, control names and thresholds are defined in an assay configuration.
 """
-__version__ = "1"
+__version__ = "1.1"
 
 from .assay import Assay, load_assay, packaged_assays
 from .eds import parse_eds
